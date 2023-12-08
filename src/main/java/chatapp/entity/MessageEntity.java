@@ -3,21 +3,22 @@ package chatapp.entity;
 
 import lombok.Getter;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
-public class MessageEntity {
-    private final LocalDateTime timestamp = LocalDateTime.now();
+public abstract class MessageEntity {
+    protected final String id = UUID.randomUUID().toString();
+    protected final LocalDateTime createdAt = LocalDateTime.now();
+    protected final String senderId; // username of the sender
+    protected final String message; // message content
 
-    private final String sender; // username of the sender
-
-    private final String receiver; // username of the receiver
-
-    private final String message; // message content
-
-    public MessageEntity(String sender, String receiver, String message) {
-        this.sender = sender;
-        this.receiver = receiver;
+    public MessageEntity(String senderId, String message) {
+        this.senderId = senderId;
         this.message = message;
     }
+
+    public abstract void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException;
 }
