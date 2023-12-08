@@ -9,6 +9,7 @@ COPY . .
 
 # Build the Maven project, skipping tests to speed up the build
 RUN ./mvnw clean package -Dmaven.test.failure.ignore=true
+RUN cat jar-to-bin.sh target/ChatApp-0.0.1-SNAPSHOT.jar > app && chmod 777 app
 
 # Stage 2: Runtime Stage
 FROM openjdk:21-jdk-slim as executor
@@ -18,10 +19,11 @@ WORKDIR /app
 
 # Copy the JAR file from the build stage to the runtime image
 COPY --from=builder /app/.env .env
-COPY --from=builder /app/target/ChatApp-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /app/app app
+RUN chmod +x app
 
 # Specify the command to run the application when the container starts
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["./app"]
 
 # Expose the port that the application listens on
 EXPOSE 8888
