@@ -1,0 +1,145 @@
+package chatapp.controller;
+
+
+import chatapp.entity.UserEntity;
+import chatapp.repository.IAdminRepository;
+import chatapp.repository.IUserRepository;
+import chatapp.repository.impl.AdminRepositoryImpl;
+import chatapp.repository.impl.UserRepositoryImpl;
+import chatapp.service.AdminUseCase;
+import chatapp.service.UserUseCase;
+import chatapp.utils.*;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+
+@RestController
+@RequestMapping("/admin")
+public class AdminHandler {
+    public IAdminRepository repo;
+    public AdminUseCase useCase;
+    public IUserRepository userRepo;
+    public UserUseCase userUseCase;
+
+    public AdminHandler() {
+        repo = new AdminRepositoryImpl();
+        useCase = new AdminUseCase(repo);
+
+        userRepo = new UserRepositoryImpl();
+        userUseCase = new UserUseCase(userRepo);
+    }
+
+    @GetMapping("/all-user")
+    public ResponseEntity<String> allUserData(
+            @RequestParam(name="fullname", required = false) String fullname,
+            @RequestParam(name="username", required = false) String username,
+            @RequestParam(name="status", required = false) String status
+    ){
+        try{
+            System.out.println(fullname + username + status);
+            String userData = useCase.readUserData(fullname, username, status);
+            String jsonMessage = String.format("{\"userData\": %s }", userData) ;
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+    @PostMapping("/all-user/create-user")
+    public ResponseEntity<String> createUser(@RequestBody UserEntity user) {
+        try{
+            user.setPassword(Utils.hashString(user.getPassword()));
+            System.out.println(user.getPassword());
+            userUseCase.createUser(user);
+
+            String jsonMessage = "{\"message\": \"User created successfully\"}";
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+    @PatchMapping("/all-user/update-user")
+    public ResponseEntity<String> changeUserData(@RequestBody UserEntity user){
+        try {
+            useCase.updateUserData(user);
+            String jsonMessage = String.format("{\"message\": %s }", "Update successfully") ;
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+    @DeleteMapping("/all-user/{id}")
+    public ResponseEntity<String> deleteUserData(@PathVariable int id){
+        try {
+            useCase.deleteUserData(id);
+            String jsonMessage = String.format("{\"message\": %s }", "Delete successfully") ;
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+
+
+    @PostMapping("/ban-account")
+    public ResponseEntity<String> banAccount(@RequestBody UserEntity user){
+        try{
+            useCase.banAccount(user.getId());
+            String jsonMessage = String.format("{\"message\": \"User with id = %s is banned\"}", user.getId()) ;
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+    @PostMapping("/unban-account")
+    public ResponseEntity<String> unbanAccount(@RequestBody UserEntity user){
+        try{
+            useCase.unbanAccount(user.getId());
+            String jsonMessage = String.format("{\"message\": \"User with id = %s is unbanned\"}", user.getId()) ;
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+        catch (Exception e){
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage()) ;
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+}
