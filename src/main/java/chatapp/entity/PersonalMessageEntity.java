@@ -3,16 +3,23 @@ package chatapp.entity;
 import lombok.Getter;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Getter
 public class PersonalMessageEntity extends MessageEntity {
     private final String receiverId;
 
-    public PersonalMessageEntity(String sender, String receiverId, String message) {
-        super(sender, message);
+    public PersonalMessageEntity(String id, String sender, String receiverId, String message, LocalDateTime createdAt) {
+        super(id, sender, message, createdAt);
         this.receiverId = receiverId;
+    }
+
+    @Override
+    public String getRecipientId() {
+        return this.receiverId;
     }
 
     @Override
@@ -24,8 +31,19 @@ public class PersonalMessageEntity extends MessageEntity {
         preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
     }
 
+
     @Override
-    public String getRecipientId() {
-        return this.receiverId;
+    public MessageEntity mapRowToEntity(ResultSet rs) {
+        try {
+            return new PersonalMessageEntity(
+                    rs.getString("id"),
+                    rs.getString("sender_id"),
+                    rs.getString("receiver_id"),
+                    rs.getString("message"),
+                    rs.getTimestamp("created_at").toLocalDateTime()
+            );
+        } catch (SQLException e) {
+            return null;
+        }
     }
 }

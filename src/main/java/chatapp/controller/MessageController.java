@@ -21,12 +21,19 @@ public class MessageController {
     }
 
     void testSaveMessage() {
-        MessageEntity messageEntity = new PersonalMessageEntity("1", "2", "Hello");
+        MessageEntity messageEntity = new PersonalMessageEntity(
+                null,
+                "user1",
+                "user2",
+                "Hello, user2!",
+                null
+        );
+        
         Result<MessageEntity> result = service.save(messageEntity);
         if (result.getError() != null) {
             System.out.println("Error occurred: " + result.getError().getMessage());
         } else {
-            System.out.println("Message saved: " + result.getObject().getMessage());
+            System.out.println("Message saved: " + result.getObject().getCreatedAt());
         }
     }
 }
