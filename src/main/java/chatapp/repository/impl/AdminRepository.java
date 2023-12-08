@@ -7,22 +7,23 @@ import chatapp.repository.IAdminRepository;
 
 import java.sql.*;
 
-public class AdminRepositoryImpl implements IAdminRepository {
+public class AdminRepository implements IAdminRepository {
     Postgres db;
     Connection conn;
-    public AdminRepositoryImpl(){
+
+    public AdminRepository() {
         db = Postgres.getInstance();
         conn = db.getConnection();
     }
+
     @Override
     public void setAccountInActive(int id) throws Exception {
         String query = "UPDATE users SET isBan=true WHERE id=?";
-        try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
@@ -31,12 +32,11 @@ public class AdminRepositoryImpl implements IAdminRepository {
     @Override
     public void setAccountActive(int id) throws Exception {
         String query = "UPDATE users SET status='active' WHERE id=?";
-        try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
@@ -46,31 +46,31 @@ public class AdminRepositoryImpl implements IAdminRepository {
     public String getUserData(String fullname, String username, String status) throws Exception {
         String query = "SELECT * FROM users";
         int count = 0;
-        if(fullname != null || username != null || status != null){
+        if (fullname != null || username != null || status != null) {
             query += " WHERE ";
         }
-        if(fullname != null){
+        if (fullname != null) {
             query += String.format(" fullname='%s' ", fullname);
-            count +=1;
+            count += 1;
         }
-        if(username != null){
-            if(count > 0) query += " and ";
-            count +=1;
+        if (username != null) {
+            if (count > 0) query += " and ";
+            count += 1;
             query += String.format(" username='%s' ", username);
         }
-        if(status != null){
-            if(count > 0) query += " and ";
-            count +=1;
+        if (status != null) {
+            if (count > 0) query += " and ";
+            count += 1;
             query += String.format(" status='%s' ", status);
         }
 
         System.out.println(query);
         String res = "[ ";
-        try{
+        try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
 
-            while (resultSet.next()){
+            while (resultSet.next()) {
                 UserEntity user = new UserEntity(resultSet.getInt("id"),
                         resultSet.getString("username"),
                         resultSet.getString("password"),
@@ -83,11 +83,10 @@ public class AdminRepositoryImpl implements IAdminRepository {
                         resultSet.getString("status"),
                         resultSet.getString("lastest_access"),
                         resultSet.getBoolean("isban")
-                        );
+                );
                 res += user.toString();
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
@@ -120,8 +119,7 @@ public class AdminRepositoryImpl implements IAdminRepository {
 
             preparedStatement.executeUpdate();
             System.out.println("Inserted a row");
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
@@ -145,9 +143,7 @@ public class AdminRepositoryImpl implements IAdminRepository {
 
             preparedStatement.executeUpdate();
             System.out.println("Update a row");
-        }
-
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
@@ -160,9 +156,7 @@ public class AdminRepositoryImpl implements IAdminRepository {
             preparedStatement.setInt(1, id);
             preparedStatement.executeUpdate();
             System.out.println("Delete a row");
-        }
-
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }

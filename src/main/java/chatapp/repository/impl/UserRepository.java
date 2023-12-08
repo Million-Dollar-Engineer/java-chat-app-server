@@ -5,20 +5,18 @@ import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
 
-import javax.swing.text.html.parser.Entity;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-public class UserRepositoryImpl implements IUserRepository {
+import java.sql.*;
+
+public class UserRepository implements IUserRepository {
 
     Postgres db;
     Connection conn;
-    public UserRepositoryImpl(){
+
+    public UserRepository() {
         db = Postgres.getInstance();
         conn = db.getConnection();
     }
+
     @Override
     public void createUser(UserEntity user) throws SQLException {
         // Implement the logic to create a new user
@@ -44,8 +42,7 @@ public class UserRepositoryImpl implements IUserRepository {
 
             preparedStatement.executeUpdate();
             System.out.println("Inserted a row");
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
@@ -60,58 +57,55 @@ public class UserRepositoryImpl implements IUserRepository {
             preparedStatement.setString(2, user.getPassword());
 
             ResultSet res = preparedStatement.executeQuery();
-            while (res.next()){
+            while (res.next()) {
                 System.out.println(res.getBoolean("isban"));
-                if(res.getBoolean("isban")){
+                if (res.getBoolean("isban")) {
                     return -2;
                 }
                 int id = res.getInt("id");
                 String updateQuery = "UPDATE users SET lastest_access = ? WHERE id = ?";
-                try(PreparedStatement statement = conn.prepareStatement(updateQuery)){
+                try (PreparedStatement statement = conn.prepareStatement(updateQuery)) {
                     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                     statement.setTimestamp(1, currentTimestamp);
                     statement.setInt(2, id);
                     statement.executeUpdate();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     throw e;
                 }
 
                 return id;
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
         return -1;
     }
-    public String takeEmailByUsername(String username) throws Exception{
+
+    public String takeEmailByUsername(String username) throws Exception {
         String query = "SELECT * FROM users WHERE username=?";
-        try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, username);
 
             ResultSet res = preparedStatement.executeQuery();
-            while (res.next()){
+            while (res.next()) {
                 return res.getString("email");
             }
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
         return "";
     }
 
-    public void resetPassword(UserEntity user, String password) throws Exception{
+    public void resetPassword(UserEntity user, String password) throws Exception {
         String query = "UPDATE users SET password=? WHERE username=?";
-        try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, password);
             preparedStatement.setString(2, user.getUsername());
 
             preparedStatement.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
