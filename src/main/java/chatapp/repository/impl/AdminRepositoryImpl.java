@@ -16,7 +16,7 @@ public class AdminRepositoryImpl implements IAdminRepository {
     }
     @Override
     public void setAccountInActive(int id) throws Exception {
-        String query = "UPDATE users SET isBan=true WHERE id=?";
+        String query = "UPDATE users SET isban=true WHERE id=?";
         try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
             preparedStatement.setInt(1, id);
 
@@ -30,7 +30,7 @@ public class AdminRepositoryImpl implements IAdminRepository {
 
     @Override
     public void setAccountActive(int id) throws Exception {
-        String query = "UPDATE users SET status='active' WHERE id=?";
+        String query = "UPDATE users SET isban=false WHERE id=?";
         try(PreparedStatement preparedStatement = conn.prepareStatement(query)){
             preparedStatement.setInt(1, id);
 
