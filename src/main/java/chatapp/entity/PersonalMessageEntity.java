@@ -23,4 +23,9 @@ public class PersonalMessageEntity extends MessageEntity {
         preparedStatement.setString(4, this.message);
         preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
     }
+
+    @Override
+    public String getRecipientId() {
+        return this.receiverId;
+    }
 }

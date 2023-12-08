@@ -21,4 +21,6 @@ public abstract class MessageEntity {
     }
 
     public abstract void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException;
+
+    public abstract String getRecipientId();
 }
