@@ -38,6 +38,7 @@ public class ServerSocketComponent implements Runnable {
             }).start();
 
         } catch (Exception e) {
+            closeServerSocket();
             logger.log(Level.SEVERE, "Error starting the server.", e);
         }
     }

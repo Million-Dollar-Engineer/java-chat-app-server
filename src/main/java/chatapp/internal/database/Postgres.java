@@ -6,13 +6,15 @@ import io.github.cdimascio.dotenv.Dotenv;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Postgres {
     private static final Logger logger = AppLogger.getLogger();
     private static final String PASSWORD;
     private static final String USER;
     private static final String URL;
+    private static volatile Postgres instance;
 
     static {
         // Load the environment variables from the .env file
@@ -31,7 +33,6 @@ public class Postgres {
         }
     }
 
-    private static volatile Postgres instance;
     private final Connection connection;
 
     private Postgres() {
