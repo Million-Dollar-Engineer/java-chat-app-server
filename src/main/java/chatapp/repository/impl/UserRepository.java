@@ -24,7 +24,12 @@ public class UserRepository implements IUserRepository {
         String query = "INSERT INTO users (username, password, fullname, address, dateofbirth, sex, email," +
                 " creationtime, status, lastest_access, isban)" +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+
+        String query1 = "INSERT INTO login_history (username)" +
+                " VALUES (?);";
+
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            conn.setAutoCommit(false);
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFullname());
@@ -41,12 +46,17 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setBoolean(11, false);
 
             preparedStatement.executeUpdate();
+
+
+
+            conn.commit();
             System.out.println("Inserted a row");
         } catch (SQLException e) {
             System.out.println(e);
+            conn.rollback();
             throw e;
         }
-
+        conn.setAutoCommit(true);
     }
 
     @Override
@@ -70,6 +80,17 @@ public class UserRepository implements IUserRepository {
                     statement.setInt(2, id);
                     statement.executeUpdate();
                 } catch (Exception e) {
+                    throw e;
+                }
+
+                String updateQuery1 = "INSERT INTO login_history (id, access_time) VALUES(?, ?)";
+                try(PreparedStatement statement = conn.prepareStatement(updateQuery1)){
+                    Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+                    statement.setInt(1, id);
+                    statement.setTimestamp(2, currentTimestamp);
+                    statement.executeUpdate();
+                }
+                catch (Exception e){
                     throw e;
                 }
 
