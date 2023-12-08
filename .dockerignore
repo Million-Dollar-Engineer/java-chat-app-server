@@ -1,0 +1,11 @@
+# Folder
+target/
+.idea/
+
+# File
+.gitignore
+README.md
+application.log
+docker-compose.yml
+Dockerfile
+Makefile

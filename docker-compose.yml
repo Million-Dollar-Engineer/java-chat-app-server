@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  chatapp:
+    container_name: chat-app-server
+    image: chat-app-server:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    restart: always
+    networks:
+      - chat-app-network
+
+networks:
+  chat-app-network:
+    driver: bridge
+    name: chat-app-network
