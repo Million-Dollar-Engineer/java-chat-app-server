@@ -88,7 +88,7 @@ public class AdminController {
     }
 
     @DeleteMapping("/all-user/{id}")
-    public ResponseEntity<String> deleteUserData(@PathVariable int id) {
+    public ResponseEntity<String> deleteUserData(@PathVariable String id) {
         try {
             service.deleteUserData(id);
             String jsonMessage = String.format("{\"message\": %s }", "Delete successfully");
@@ -107,7 +107,8 @@ public class AdminController {
     @PostMapping("/ban-account")
     public ResponseEntity<String> banAccount(@RequestBody UserEntity user) {
         try {
-            service.banAccount(user.getId());
+            System.out.println("AAA");
+            service.setAccountStatus(user.getId(), "banned");
             String jsonMessage = String.format("{\"message\": \"User with id = %s is banned\"}", user.getId());
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

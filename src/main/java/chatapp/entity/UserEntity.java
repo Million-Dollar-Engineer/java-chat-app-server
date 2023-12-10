@@ -1,19 +1,21 @@
 package chatapp.entity;
 
 public class UserEntity {
-    private int id;
+    private String id;
     private String username;
     private String password;
 
-    public int getId() {
+
+
+    private String fullname;
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
-
-    private String fullname;
 
     private String address;
 
@@ -37,7 +39,7 @@ public class UserEntity {
 //    }
 
 
-    public UserEntity(int id, String username, String password, String fullname, String address, String dateOfBirth,
+    public UserEntity(String id, String username, String password, String fullname, String address, String dateOfBirth,
                       String sex, String email, String creationTime,
                       String status, String lastest_access, boolean isban) {
         this.id = id;

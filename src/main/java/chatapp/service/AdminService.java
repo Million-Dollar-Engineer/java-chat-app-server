@@ -11,16 +11,16 @@ public class AdminService {
         this.repo = adminRepository;
     }
 
-    public void banAccount(int id) throws Exception {
+    public void setAccountStatus(String id, String status) throws Exception {
         try {
-            repo.setAccountInActive(id);
+            repo.setAccountStatus(id, status);
         } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
     }
 
-    public void unbanAccount(int id) throws Exception {
+    public void unbanAccount(String id) throws Exception {
         try {
             repo.setAccountActive(id);
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class AdminService {
         }
     }
 
-    public void deleteUserData(int id) throws Exception {
+    public void deleteUserData(String id) throws Exception {
         try {
             repo.deleteUser(id);
         } catch (Exception e) {

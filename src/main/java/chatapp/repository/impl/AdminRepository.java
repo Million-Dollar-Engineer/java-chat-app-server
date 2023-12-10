@@ -17,10 +17,11 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public void setAccountInActive(int id) throws Exception {
-        String query = "UPDATE users SET isBan=true WHERE id=?";
+    public void setAccountStatus(String id, String status) throws Exception {
+        String query = "UPDATE users SET status=CAST(? AS USERSTATUS) WHERE id=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setString(1, status);
+            preparedStatement.setString(2, id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -30,10 +31,10 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public void setAccountActive(int id) throws Exception {
+    public void setAccountActive(String id) throws Exception {
         String query = "UPDATE users SET status='active' WHERE id=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setString(1, id);
 
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
@@ -71,7 +72,7 @@ public class AdminRepository implements IAdminRepository {
             ResultSet resultSet = statement.executeQuery(query);
 
             while (resultSet.next()) {
-                UserEntity user = new UserEntity(resultSet.getInt("id"),
+                UserEntity user = new UserEntity(resultSet.getString("id"),
                         resultSet.getString("username"),
                         resultSet.getString("password"),
                         resultSet.getString("fullname"),
@@ -139,7 +140,7 @@ public class AdminRepository implements IAdminRepository {
             preparedStatement.setString(6, user.getEmail());
             preparedStatement.setString(7, user.getStatus());
             preparedStatement.setBoolean(8, user.isIsban());
-            preparedStatement.setInt(9, user.getId());
+            preparedStatement.setString(9, user.getId());
 
             preparedStatement.executeUpdate();
             System.out.println("Update a row");
@@ -150,10 +151,10 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public void deleteUser(int id) throws SQLException {
+    public void deleteUser(String id) throws SQLException {
         String query = "DELETE FROM users WHERE id=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setInt(1, id);
+            preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
             System.out.println("Delete a row");
         } catch (Exception e) {
