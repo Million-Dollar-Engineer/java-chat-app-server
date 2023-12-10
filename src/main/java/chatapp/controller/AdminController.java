@@ -107,7 +107,6 @@ public class AdminController {
     @PostMapping("/ban-account")
     public ResponseEntity<String> banAccount(@RequestBody UserEntity user) {
         try {
-            System.out.println("AAA");
             service.setAccountStatus(user.getId(), "banned");
             String jsonMessage = String.format("{\"message\": \"User with id = %s is banned\"}", user.getId());
             return ResponseEntity.ok()
@@ -124,7 +123,7 @@ public class AdminController {
     @PostMapping("/unban-account")
     public ResponseEntity<String> unbanAccount(@RequestBody UserEntity user) {
         try {
-            service.unbanAccount(user.getId());
+            service.setAccountStatus(user.getId(), "active");
             String jsonMessage = String.format("{\"message\": \"User with id = %s is unbanned\"}", user.getId());
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

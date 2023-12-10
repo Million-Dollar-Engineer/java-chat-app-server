@@ -76,7 +76,7 @@ public class UserRepository implements IUserRepository {
                 throw new Exception("Your username or password is incorrect");
             }
             do {
-                if (res.getString("status") == "banned") {
+                if (res.getString("status").equals("banned")) {
                     throw new Exception("Your account is banned");
                 }
                 id = res.getString("id");

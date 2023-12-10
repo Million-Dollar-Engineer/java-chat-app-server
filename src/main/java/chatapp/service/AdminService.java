@@ -20,14 +20,6 @@ public class AdminService {
         }
     }
 
-    public void unbanAccount(String id) throws Exception {
-        try {
-            repo.setAccountActive(id);
-        } catch (Exception e) {
-            System.out.println(e);
-            throw e;
-        }
-    }
 
     public String readUserData(String fullname, String username, String status) throws Exception {
         try {

@@ -30,18 +30,6 @@ public class AdminRepository implements IAdminRepository {
         }
     }
 
-    @Override
-    public void setAccountActive(String id) throws Exception {
-        String query = "UPDATE users SET status='active' WHERE id=?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setString(1, id);
-
-            preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw e;
-        }
-    }
 
     @Override
     public String getUserData(String fullname, String username, String status) throws Exception {
@@ -95,37 +83,6 @@ public class AdminRepository implements IAdminRepository {
         return res;
     }
 
-    @Override
-    public void createUser(UserEntity user) throws SQLException {
-        // Implement the logic to create a new user
-        // Write sql
-        String query = "INSERT INTO users (username, password, fullname, address, dateofbirth, sex, email," +
-                " creationtime, status, lastest_access, isban)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getPassword());
-            preparedStatement.setString(3, user.getFullname());
-            preparedStatement.setString(4, user.getAddress());
-            preparedStatement.setString(5, user.getDateOfBirth());
-            preparedStatement.setString(6, user.getSex());
-            preparedStatement.setString(7, user.getEmail());
-
-            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-            preparedStatement.setTimestamp(8, currentTimestamp);
-
-            preparedStatement.setString(9, "active");
-            preparedStatement.setTimestamp(10, currentTimestamp);
-            preparedStatement.setBoolean(11, false);
-
-            preparedStatement.executeUpdate();
-            System.out.println("Inserted a row");
-        } catch (SQLException e) {
-            System.out.println(e);
-            throw e;
-        }
-
-    }
 
     @Override
     public void updateUser(UserEntity user) throws SQLException {
