@@ -3,6 +3,7 @@ package chatapp.service;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.utils.Utils;
+import jakarta.servlet.http.HttpServletRequest;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
@@ -29,11 +30,27 @@ public class UserService {
         }
     }
 
-    public int findUserForLogin(UserEntity user) throws Exception {
+    public String getClientIP(HttpServletRequest request) {
+        String clientIP = request.getHeader("X-Forwarded-For");
+        if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+            clientIP = request.getHeader("Proxy-Client-IP");
+        }
+        if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+            clientIP = request.getHeader("WL-Proxy-Client-IP");
+        }
+
+        if (clientIP == null || clientIP.isEmpty() || "unknown".equalsIgnoreCase(clientIP)) {
+            clientIP = request.getRemoteAddr();
+        }
+
+        return clientIP;
+    }
+
+    public String findUserForLogin(UserEntity user, String IPaddr) throws Exception {
         // check logic
         // call repo
         try {
-            return repo.findUserByUsernamePassword(user);
+            return repo.findUserByUsernamePassword(user, IPaddr);
         } catch (Exception e) {
             throw e;
         }

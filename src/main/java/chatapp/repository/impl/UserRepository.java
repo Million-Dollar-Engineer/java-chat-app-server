@@ -6,6 +6,8 @@ import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
 
 import java.sql.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class UserRepository implements IUserRepository {
 
@@ -18,15 +20,13 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void createUser(UserEntity user) throws SQLException {
+    public void createUser(UserEntity user) throws SQLException, ParseException {
         // Implement the logic to create a new user
         // Write sql
-        String query = "INSERT INTO users (username, password, fullname, address, dateofbirth, sex, email," +
-                " creationtime, status, lastest_access, isban)" +
-                " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-        String query1 = "INSERT INTO login_history (username)" +
-                " VALUES (?);";
+        String query = "INSERT INTO users (username, password, full_name, addr, dob, sex, email," +
+                "role, status, last_active, deleted, created_at, updated_at, id)" +
+                " VALUES (?, ?, ?, ?, ?, CAST(? AS GENDER), ?, CAST(? AS USERROLE), CAST(? AS USERSTATUS)," +
+                " ?, ?, ?, ?, ?);";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             conn.setAutoCommit(false);
@@ -34,24 +34,29 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(2, user.getPassword());
             preparedStatement.setString(3, user.getFullname());
             preparedStatement.setString(4, user.getAddress());
-            preparedStatement.setString(5, user.getDateOfBirth());
+
+            user.setDateOfBirth(user.getDateOfBirth() + " 00:00:00");
+            Timestamp timestamp= Timestamp.valueOf(user.getDateOfBirth());
+
+            preparedStatement.setTimestamp(5, timestamp);
             preparedStatement.setString(6, user.getSex());
             preparedStatement.setString(7, user.getEmail());
+            preparedStatement.setString(8, "user");
+            preparedStatement.setString(9, "active");
 
             Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-            preparedStatement.setTimestamp(8, currentTimestamp);
-
-            preparedStatement.setString(9, "active");
             preparedStatement.setTimestamp(10, currentTimestamp);
+
             preparedStatement.setBoolean(11, false);
+            preparedStatement.setTimestamp(12, currentTimestamp);
+            preparedStatement.setTimestamp(13, currentTimestamp);
+            preparedStatement.setString(14, user.getUsername() + user.getFullname());
 
             preparedStatement.executeUpdate();
 
-
-
             conn.commit();
             System.out.println("Inserted a row");
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println(e);
             conn.rollback();
             throw e;
@@ -60,47 +65,50 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public int findUserByUsernamePassword(UserEntity user) throws Exception {
+    public String findUserByUsernamePassword(UserEntity user, String IPaddr) throws Exception {
+        String id = "";
         String query = "SELECT * FROM users where username=? and password=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
-
             ResultSet res = preparedStatement.executeQuery();
-            while (res.next()) {
-                System.out.println(res.getBoolean("isban"));
-                if (res.getBoolean("isban")) {
-                    return -2;
+            if(!res.next()){
+                throw new Exception("Your username or password is incorrect");
+            }
+            do {
+
+                System.out.println(res.getString("status"));
+                if (res.getString("status") == "banned") {
+                    throw new Exception("Your account is banned");
                 }
-                int id = res.getInt("id");
-                String updateQuery = "UPDATE users SET lastest_access = ? WHERE id = ?";
+                id = res.getString("id");
+                String updateQuery = "UPDATE users SET last_active = ? WHERE id = ?";
                 try (PreparedStatement statement = conn.prepareStatement(updateQuery)) {
                     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                     statement.setTimestamp(1, currentTimestamp);
-                    statement.setInt(2, id);
+                    statement.setString(2, id);
                     statement.executeUpdate();
                 } catch (Exception e) {
                     throw e;
                 }
 
-                String updateQuery1 = "INSERT INTO login_history (id, access_time) VALUES(?, ?)";
+                String updateQuery1 = "INSERT INTO login_histories (user_id, ip_addr, login_time) VALUES(?, ?, ?)";
                 try(PreparedStatement statement = conn.prepareStatement(updateQuery1)){
                     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-                    statement.setInt(1, id);
-                    statement.setTimestamp(2, currentTimestamp);
+                    statement.setString(1, id);
+                    statement.setString(2, IPaddr);
+                    statement.setTimestamp(3, currentTimestamp);
                     statement.executeUpdate();
                 }
                 catch (Exception e){
                     throw e;
                 }
-
-                return id;
-            }
+            } while (res.next());
         } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
-        return -1;
+        return id;
     }
 
     public String takeEmailByUsername(String username) throws Exception {

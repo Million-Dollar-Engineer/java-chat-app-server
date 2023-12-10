@@ -6,6 +6,7 @@ import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.UserRepository;
 import chatapp.service.UserService;
 import chatapp.utils.Utils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,23 +51,15 @@ public class UserController {
     }
 
     @PostMapping(path = "/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserEntity user) {
+    public ResponseEntity<String> loginUser(@RequestBody UserEntity user, HttpServletRequest request) {
         try {
             user.setPassword(Utils.hashString(user.getPassword()));
             System.out.println(user.getPassword());
-            int id = service.findUserForLogin(user);
+            String id = service.findUserForLogin(user, service.getClientIP(request));
             System.out.println(id);
 
             String jsonMessage;
-            if (id == -2) {
-                jsonMessage = String.format("{\"message\": \"Your account is banned\", \"id\": \"%s\"}",
-                        id);
-            } else if (id != -1) {
-                jsonMessage = String.format("{\"message\": \"Login successfully\", \"id\": \"%s\"}",
-                        id);
-            } else {
-                jsonMessage = String.format("{\"message\": \"Username or password is incorrect\"}");
-            }
+            jsonMessage = String.format("{\"message\": \"Login successfully\", \"id\": \"%s\"}", id);
             return ResponseEntity
                     .ok()
                     .header("Content-Type", "application/json").
