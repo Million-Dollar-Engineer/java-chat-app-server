@@ -91,6 +91,14 @@ public class UserEntity {
         return dateOfBirth;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public void setDateOfBirth(String dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
@@ -144,18 +152,21 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "{" +
-                "\"id\":" + id +
-                ", \"username\":'" + username + '\'' +
-                ", \"fullname\":'" + fullname + '\'' +
-                ", \"address\":'" + address + '\'' +
-                ", \"dateOfBirth\":'" + dateOfBirth + '\'' +
-                ", \"sex\":'" + sex + '\'' +
-                ", \"email\":'" + email + '\'' +
-                ", \"creationTime\":'" + creationTime + '\'' +
-                ", \"status\":'" + status + '\'' +
-                ", \"lastest_access\":'" + lastest_access + '\'' +
-                ", \"isban\":" + isban +
+        return "UserEntity{" +
+                "id:'" + id + '\'' +
+                ", username:'" + username + '\'' +
+                ", password:'" + password + '\'' +
+                ", fullname:'" + fullname + '\'' +
+                ", address:'" + address + '\'' +
+                ", dateOfBirth:'" + dateOfBirth + '\'' +
+                ", sex:'" + sex + '\'' +
+                ", email:'" + email + '\'' +
+                ", role:'" + role + '\'' +
+                ", status:'" + status + '\'' +
+                ", last_active:'" + last_active + '\'' +
+                ", deleted:'" + deleted + '\'' +
+                ", created_at:'" + created_at + '\'' +
+                ", updated_at:'" + updated_at + '\'' +
                 '}';
     }
 }

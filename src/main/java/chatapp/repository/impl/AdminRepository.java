@@ -71,17 +71,21 @@ public class AdminRepository implements IAdminRepository {
 
     @Override
     public void updateUser(UserEntity user) throws SQLException {
-        String query = "UPDATE users SET username=?, fullname=?, address=?, dateofbirth=?, sex=?, email=?," +
-                "status=?, isban=? WHERE id=?";
+        String query = "UPDATE users SET username=?, full_name=?, addr=?, dob=?, sex=CAST(? AS GENDER), email=?," +
+                "role= CAST(? AS USERROLE), status=CAST(? AS USERSTATUS) WHERE id=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getFullname());
             preparedStatement.setString(3, user.getAddress());
-            preparedStatement.setString(4, user.getDateOfBirth());
+
+            user.setDateOfBirth(user.getDateOfBirth() + " 00:00:00");
+            Timestamp timestamp= Timestamp.valueOf(user.getDateOfBirth());
+
+            preparedStatement.setTimestamp(4, timestamp);
             preparedStatement.setString(5, user.getSex());
             preparedStatement.setString(6, user.getEmail());
-            preparedStatement.setString(7, user.getStatus());
-            preparedStatement.setBoolean(8, user.isIsban());
+            preparedStatement.setString(7, user.getRole());
+            preparedStatement.setString(8, user.getStatus());
             preparedStatement.setString(9, user.getId());
 
             preparedStatement.executeUpdate();
