@@ -135,4 +135,22 @@ public class AdminController {
                     .body(jsonMessage);
         }
     }
+
+    @GetMapping("/login-histories")
+    public ResponseEntity<String> getLoginHistories(
+            @RequestParam(name = "orderBy", required = false) String order
+    ) {
+        try {
+
+            String jsonMessage = String.format("{\"loginData\": \" %s\"}");
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
 }

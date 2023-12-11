@@ -49,4 +49,13 @@ public class AdminService {
         }
     }
 
+    public void getLoginHistories(String order) throws Exception{
+        try {
+
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

@@ -50,7 +50,8 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setBoolean(11, false);
             preparedStatement.setTimestamp(12, currentTimestamp);
             preparedStatement.setTimestamp(13, currentTimestamp);
-            preparedStatement.setString(14, user.getUsername() + user.getFullname());
+            preparedStatement.setString(14, user.getUsername() +
+                    user.getFullname().replace(" ", ""));
 
             preparedStatement.executeUpdate();
 

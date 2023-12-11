@@ -4,6 +4,7 @@ package chatapp.repository.impl;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IAdminRepository;
+import org.apache.catalina.User;
 
 import java.sql.*;
 
@@ -54,32 +55,16 @@ public class AdminRepository implements IAdminRepository {
         }
 
         System.out.println(query);
-        String res = "[ ";
+        String res = "";
         try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-
-            while (resultSet.next()) {
-                UserEntity user = new UserEntity(resultSet.getString("id"),
-                        resultSet.getString("username"),
-                        resultSet.getString("password"),
-                        resultSet.getString("fullname"),
-                        resultSet.getString("address"),
-                        resultSet.getString("dateofbirth"),
-                        resultSet.getString("sex"),
-                        resultSet.getString("email"),
-                        resultSet.getString("creationtime"),
-                        resultSet.getString("status"),
-                        resultSet.getString("lastest_access"),
-                        resultSet.getBoolean("isban")
-                );
-                res += user.toString();
-            }
+            res = UserEntity.resultSetToJSON(resultSet);
         } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
-        res += " ]";
+
         return res;
     }
 
@@ -114,6 +99,21 @@ public class AdminRepository implements IAdminRepository {
             preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
             System.out.println("Delete a row");
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
+    @Override
+    public void getLoginHistories(String order) throws SQLException{
+        String query = "SELECT * FROM login_histories ORDER BY login_time ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, order);
+            ResultSet res = preparedStatement.executeQuery();
+            while (res.next()){
+
+            }
         } catch (Exception e) {
             System.out.println(e);
             throw e;

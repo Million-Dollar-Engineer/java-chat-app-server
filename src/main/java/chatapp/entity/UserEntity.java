@@ -1,13 +1,43 @@
 package chatapp.entity;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class UserEntity {
     private String id;
     private String username;
     private String password;
-
-
-
     private String fullname;
+    private String address;
+    private String dateOfBirth;
+    private String sex;
+    private String email;
+    private String role;
+    private String status;
+    private String last_active;
+    private String deleted;
+    private String created_at;
+    private String updated_at;
+
+
+    public UserEntity(String id, String username, String password, String fullname, String address,
+                      String dateOfBirth, String sex, String email, String role, String status, String last_active,
+                      String deleted, String created_at, String updated_at) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.fullname = fullname;
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+        this.sex = sex;
+        this.email = email;
+        this.role = role;
+        this.status = status;
+        this.last_active = last_active;
+        this.deleted = deleted;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+    }
 
     public String getId() {
         return id;
@@ -17,60 +47,12 @@ public class UserEntity {
         this.id = id;
     }
 
-    private String address;
-
-    private String dateOfBirth;
-    private String sex;
-    private String email;
-    private String creationTime;
-    private String status;
-    private String lastest_access;
-    private boolean isban;
-
-//    public UserEntity(String username, String password, String fullname, String address, String dateOfBirth,
-//                      String sex, String email) {
-//        this.username = username;
-//        this.password = password;
-//        this.fullname = fullname;
-//        this.address = address;
-//        this.dateOfBirth = dateOfBirth;
-//        this.sex = sex;
-//        this.email = email;
-//    }
-
-
-    public UserEntity(String id, String username, String password, String fullname, String address, String dateOfBirth,
-                      String sex, String email, String creationTime,
-                      String status, String lastest_access, boolean isban) {
-        this.id = id;
-        this.username = username;
-        this.password = password;
-        this.fullname = fullname;
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
-        this.sex = sex;
-        this.email = email;
-        this.creationTime = creationTime;
-        this.status = status;
-        this.lastest_access = lastest_access;
-        this.isban = isban;
-    }
-
-
     public String getStatus() {
         return status;
     }
 
     public void setStatus(String status) {
         this.status = status;
-    }
-
-    public boolean isIsban() {
-        return isban;
-    }
-
-    public void setIsban(boolean isban) {
-        this.isban = isban;
     }
 
     public String getUsername() {
@@ -127,6 +109,37 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    static public String resultSetToJSON(ResultSet resultSet) throws SQLException {
+        String res = "[ ";
+        try{
+            while (resultSet.next()) {
+                UserEntity user = new UserEntity(
+                        resultSet.getString("id"),
+                        resultSet.getString("username"),
+                        resultSet.getString("password"),
+                        resultSet.getString("full_name"),
+                        resultSet.getString("addr"),
+                        resultSet.getString("dob"),
+                        resultSet.getString("sex"),
+                        resultSet.getString("email"),
+                        resultSet.getString("role"),
+                        resultSet.getString("status"),
+                        resultSet.getString("last_active"),
+                        resultSet.getString("deleted"),
+                        resultSet.getString("created_at"),
+                        resultSet.getString("updated_at")
+                );
+                res += user.toString();
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+        res += " ]";
+        return res;
     }
 
     @Override
