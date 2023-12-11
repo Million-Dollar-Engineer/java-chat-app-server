@@ -152,21 +152,21 @@ public class UserEntity {
 
     @Override
     public String toString() {
-        return "UserEntity{" +
-                "id:'" + id + '\'' +
-                ", username:'" + username + '\'' +
-                ", password:'" + password + '\'' +
-                ", fullname:'" + fullname + '\'' +
-                ", address:'" + address + '\'' +
-                ", dateOfBirth:'" + dateOfBirth + '\'' +
-                ", sex:'" + sex + '\'' +
-                ", email:'" + email + '\'' +
-                ", role:'" + role + '\'' +
-                ", status:'" + status + '\'' +
-                ", last_active:'" + last_active + '\'' +
-                ", deleted:'" + deleted + '\'' +
-                ", created_at:'" + created_at + '\'' +
-                ", updated_at:'" + updated_at + '\'' +
+        return "{" +
+                "\"id\":'" + id + '\'' +
+                ", \"username\": \" " + username + '\"' +
+                ", \"password\": \" " + password + '\"' +
+                ", \"fullname\": \" " + fullname + '\"' +
+                ", \"address\": \" " + address + '\"' +
+                ", \"dateOfBirth\": \" " + dateOfBirth + '\"' +
+                ", \"sex\": \" " + sex + '\"' +
+                ", \"email\": \" " + email + '\"' +
+                ", \"role\": \" " + role + '\"' +
+                ", \"status\": \" " + status + '\"' +
+                ", \"last_active\": \" " + last_active + '\"' +
+                ", \"deleted\": \" " + deleted + '\"' +
+                ", \"created_at\": \" " + created_at + '\"' +
+                ", \"updated_at\": \" " + updated_at + '\"' +
                 '}';
     }
 }
