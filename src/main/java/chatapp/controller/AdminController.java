@@ -141,8 +141,8 @@ public class AdminController {
             @RequestParam(name = "orderBy", required = false) String order
     ) {
         try {
-
-            String jsonMessage = String.format("{\"loginData\": \" %s\"}");
+            String loginData = service.getLoginHistories(order);
+            String jsonMessage = String.format("{\"loginData\":  %s }", loginData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);

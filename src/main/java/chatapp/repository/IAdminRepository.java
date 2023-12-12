@@ -9,5 +9,5 @@ public interface IAdminRepository {
     public String getUserData(String fullname, String username, String status) throws Exception;
     public void updateUser(UserEntity user) throws SQLException;
     public void deleteUser(String id) throws SQLException;
-    public void getLoginHistories(String order) throws SQLException;
+    public String getLoginHistories(String order) throws SQLException;
 }

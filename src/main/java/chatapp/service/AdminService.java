@@ -49,9 +49,10 @@ public class AdminService {
         }
     }
 
-    public void getLoginHistories(String order) throws Exception{
+    public String getLoginHistories(String order) throws Exception{
         try {
-
+            if(order == null) order = "";
+            return repo.getLoginHistories(order);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

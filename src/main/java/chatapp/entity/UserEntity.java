@@ -140,6 +140,32 @@ public class UserEntity {
                         resultSet.getString("updated_at")
                 );
                 res += user.toString();
+                res += ",";
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+        res += " ]";
+        return res;
+    }
+
+    static public String loginHistoriesResultSetToJSON(ResultSet resultSet) throws SQLException{
+        String res = "[ ";
+        try{
+            while (resultSet.next()) {
+                String tmp = "";
+                tmp += "{";
+                tmp += (
+                        "\"username\": \" " + resultSet.getString("username")+ '\"' +
+                                ", \"fullname\": \" " + resultSet.getString("full_name") + '\"' +
+                                ", \"ip\": \" " + resultSet.getString("ip_addr") + '\"' +
+                                ", \"login_time\": \" " + resultSet.getString("login_time") + '\"'
+                        );
+                tmp += "}";
+                res += tmp;
+                res += ",";
             }
         }
         catch (Exception e){
@@ -153,7 +179,7 @@ public class UserEntity {
     @Override
     public String toString() {
         return "{" +
-                "\"id\":'" + id + '\'' +
+                "\"id\": \" " + id + '\"' +
                 ", \"username\": \" " + username + '\"' +
                 ", \"password\": \" " + password + '\"' +
                 ", \"fullname\": \" " + fullname + '\"' +
