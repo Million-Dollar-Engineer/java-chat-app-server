@@ -12,4 +12,5 @@ public interface IUserRepository {
     public void resetPassword(UserEntity user, String password) throws Exception;
     public String takeEmailByUsername(String username) throws Exception;
     public void saveFriendRequest(String user_id, String friend_id) throws SQLException;
+    public void acceptFriendRequest(String user_id, String friend_id) throws SQLException;
 }

@@ -160,4 +160,19 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    @Override
+    public void acceptFriendRequest(String user_id, String friend_id) throws SQLException{
+        String query = "UPDATE user_friends SET is_accepted = true WHERE user_id = ? and friend_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, friend_id);
+            preparedStatement.setString(2, user_id);
+
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

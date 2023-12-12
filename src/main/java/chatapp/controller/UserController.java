@@ -112,4 +112,25 @@ public class UserController {
                     .body(jsonMessage);
         }
     }
+
+    @PatchMapping("/accept-friend")
+    public ResponseEntity<String> acceptFriendRequest(
+            @RequestBody FriendRequest friendRequest
+    ) {
+        try {
+            service.acceptFriendRequest(friendRequest.user_id, friendRequest.friend_id);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"Friend request was accepted\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
 }

@@ -132,4 +132,16 @@ public class UserService {
         }
     }
 
+    public void acceptFriendRequest(String user_id, String friend_id) throws Exception{
+        try {
+            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+                repo.acceptFriendRequest(user_id, friend_id);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }
