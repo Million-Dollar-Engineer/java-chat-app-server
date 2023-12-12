@@ -120,4 +120,16 @@ public class UserService {
         }
     }
 
+    public void saveFriendRequest(String user_id, String friend_id) throws Exception{
+        try {
+            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+                repo.saveFriendRequest(user_id, friend_id);
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

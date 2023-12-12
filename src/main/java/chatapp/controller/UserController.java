@@ -1,6 +1,7 @@
 package chatapp.controller;
 
 
+import chatapp.entity.FriendRequest;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.UserRepository;
@@ -78,6 +79,27 @@ public class UserController {
             service.resetAndSendPasswordToEmail(user);
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Password was sent through your email\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        }
+    }
+
+    @PostMapping("/add-friend")
+    public ResponseEntity<String> sendFriendRequest(
+            @RequestBody FriendRequest friendRequest
+            ) {
+        try {
+            service.saveFriendRequest(friendRequest.user_id, friendRequest.friend_id);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"Friend request was sent\"}");
 
             return ResponseEntity
                     .ok()

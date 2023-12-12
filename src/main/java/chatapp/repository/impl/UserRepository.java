@@ -110,6 +110,7 @@ public class UserRepository implements IUserRepository {
         return id;
     }
 
+    @Override
     public String takeEmailByUsername(String username) throws Exception {
         String query = "SELECT * FROM users WHERE username=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -126,6 +127,7 @@ public class UserRepository implements IUserRepository {
         return "";
     }
 
+    @Override
     public void resetPassword(UserEntity user, String password) throws Exception {
         String query = "UPDATE users SET password=? WHERE username=?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -138,4 +140,24 @@ public class UserRepository implements IUserRepository {
             throw e;
         }
     }
+
+    @Override
+    public void saveFriendRequest(String user_id, String friend_id) throws SQLException{
+        String query = "INSERT INTO user_friends (user_id, friend_id, created_at, is_accepted)" +
+                " VALUES(?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, friend_id);
+            Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+            preparedStatement.setTimestamp(3, currentTimestamp);
+
+            preparedStatement.setBoolean(4, false);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }
