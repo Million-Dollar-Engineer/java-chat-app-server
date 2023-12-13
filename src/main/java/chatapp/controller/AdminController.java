@@ -143,7 +143,7 @@ public class AdminController {
     @GetMapping("/friend-list/{user_id}")
     public ResponseEntity<String> getFriendList(@PathVariable String user_id) {
         try {
-            String jsonMessage = String.format("{\"friendList\":  %s }", );
+            String jsonMessage = String.format("{\"friendList\":  %s }", "");
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
