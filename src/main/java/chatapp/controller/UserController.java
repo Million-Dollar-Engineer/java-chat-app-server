@@ -25,6 +25,14 @@ public class UserController {
         service = new UserService(repo);
     }
 
+
+    ResponseEntity<String> responseError(Exception e){
+        String jsonMessage = String.format("{\"error\": \"%s\"}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .header("Content-Type", "application/json")
+                .body(jsonMessage);
+    }
+
     @GetMapping()
     public String hello() {
         return "Hello user 123";
@@ -44,10 +52,7 @@ public class UserController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -66,10 +71,7 @@ public class UserController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -85,10 +87,7 @@ public class UserController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -106,10 +105,7 @@ public class UserController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -127,10 +123,7 @@ public class UserController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 }

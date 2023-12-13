@@ -30,6 +30,13 @@ public class AdminController {
         userService = new UserService(userRepo);
     }
 
+    ResponseEntity<String> responseError(Exception e){
+        String jsonMessage = String.format("{\"error\": \"%s\"}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .header("Content-Type", "application/json")
+                .body(jsonMessage);
+    }
+
     @GetMapping("/all-user")
     public ResponseEntity<String> allUserData(
             @RequestParam(name = "fullname", required = false) String fullname,
@@ -44,10 +51,7 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -64,10 +68,7 @@ public class AdminController {
                     .header("Content-Type", "application/json").
                     body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -80,10 +81,7 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -96,10 +94,7 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -113,10 +108,7 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -129,10 +121,7 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return responseError(e);
         }
     }
 
@@ -147,10 +136,19 @@ public class AdminController {
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
         } catch (Exception e) {
-            String jsonMessage = String.format("{\"message\": \"%s\"}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("/friend-list/{user_id}")
+    public ResponseEntity<String> getFriendList(@PathVariable String user_id) {
+        try {
+            String jsonMessage = String.format("{\"friendList\":  %s }", );
+            return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
         }
     }
 }

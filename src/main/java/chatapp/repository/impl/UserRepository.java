@@ -141,6 +141,27 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    public boolean checkExistFriendRequest(String user_id, String friend_id) throws SQLException{
+        String query = "SELECT * FROM user_friends WHERE (user_id = ? AND friend_id = ?) "
+                + " OR (user_id = ? AND friend_id = ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, friend_id);
+            preparedStatement.setString(3, friend_id);
+            preparedStatement.setString(4, user_id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(!resultSet.next()){
+                return false;
+            }
+
+            return true;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
     @Override
     public void saveFriendRequest(String user_id, String friend_id) throws SQLException{
         String query = "INSERT INTO user_friends (user_id, friend_id, created_at, is_accepted)" +
@@ -166,6 +187,23 @@ public class UserRepository implements IUserRepository {
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, friend_id);
             preparedStatement.setString(2, user_id);
+
+            preparedStatement.executeUpdate();
+        }
+        catch (SQLException e){
+            System.out.println(e);
+            throw e;
+        }
+    }
+
+    public void deleteFriend(String user_id, String friend_id) throws SQLException{
+        String query = "DELETE FROM user_friends WHERE (user_id = ? and friend_id = ?) " +
+                " OR (user_id = ? and friend_id = ?) ";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, friend_id);
+            preparedStatement.setString(3, friend_id);
+            preparedStatement.setString(4, user_id);
 
             preparedStatement.executeUpdate();
         }

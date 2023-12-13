@@ -144,4 +144,25 @@ public class UserService {
         }
     }
 
+    public void unFriend(String user_id, String friend_id) throws Exception{
+        try {
+            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
+
+    public void getFriendList(String user_id) throws  Exception{
+        try {
+
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
 }
