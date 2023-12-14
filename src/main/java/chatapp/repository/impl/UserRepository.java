@@ -4,6 +4,7 @@ package chatapp.repository.impl;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
+import org.springframework.core.annotation.Order;
 
 import java.sql.*;
 import java.text.ParseException;
@@ -196,6 +197,7 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    @Override
     public void deleteFriend(String user_id, String friend_id) throws SQLException{
         String query = "DELETE FROM user_friends WHERE (user_id = ? and friend_id = ?) " +
                 " OR (user_id = ? and friend_id = ?) ";
@@ -212,5 +214,38 @@ public class UserRepository implements IUserRepository {
             throw e;
         }
     }
+
+    @Override
+    public String getFriendList(String user_id) throws SQLException{
+        String res = "";
+        String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
+                "WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?) " +
+                "AND (uf.user_id = u.id OR uf.friend_id = u.id)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, user_id);
+            preparedStatement.setString(3, user_id);
+
+            res += "[";
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int count = 0;
+            while (resultSet.next()){
+                if(count > 0) res+= ",";
+                res+= "{";
+                res+= ("\"username\": \"" + resultSet.getString("username") + "\" ,");
+                res+= ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
+                res+= "}";
+                count++;
+            }
+
+            res += "]";
+            return res;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
+
 
 }

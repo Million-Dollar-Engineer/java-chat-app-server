@@ -13,4 +13,6 @@ public interface IUserRepository {
     public String takeEmailByUsername(String username) throws Exception;
     public void saveFriendRequest(String user_id, String friend_id) throws SQLException;
     public void acceptFriendRequest(String user_id, String friend_id) throws SQLException;
+    public void deleteFriend(String user_id, String friend_id) throws SQLException;
+    public String getFriendList(String user_id) throws SQLException;
 }

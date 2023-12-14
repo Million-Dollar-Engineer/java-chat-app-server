@@ -126,4 +126,20 @@ public class UserController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/friend-list")
+    public ResponseEntity<String> getFriendList(@RequestBody UserEntity user) {
+        try {
+            String friendListData = service.getFriendList(user.getId());
+            String jsonMessage;
+            jsonMessage = String.format("{\"friendList\": %s }", friendListData);
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

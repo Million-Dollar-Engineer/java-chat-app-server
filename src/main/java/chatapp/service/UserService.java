@@ -156,9 +156,9 @@ public class UserService {
         }
     }
 
-    public void getFriendList(String user_id) throws  Exception{
+    public String getFriendList(String user_id) throws  Exception{
         try {
-
+            return repo.getFriendList(user_id);
         }
         catch (Exception e){
             System.out.println(e);
