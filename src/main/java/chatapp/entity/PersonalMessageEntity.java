@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class PersonalMessageEntity extends MessageEntity {
@@ -45,5 +47,17 @@ public class PersonalMessageEntity extends MessageEntity {
         } catch (SQLException e) {
             return null;
         }
+    }
+
+    @Override
+    public List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
+        List<MessageEntity> list = new ArrayList<>();
+
+        while (rs.next()) {
+            MessageEntity entity = mapRowToEntity(rs);
+            list.add(entity);
+        }
+
+        return list;
     }
 }

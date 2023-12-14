@@ -7,13 +7,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Getter
 public abstract class MessageEntity {
     protected final String senderId; // username of the sender
     protected final String message; // message content
-    
+
     protected String id; // unique id of the message
     protected LocalDateTime createdAt; // time when the message was sent
 
@@ -29,4 +30,6 @@ public abstract class MessageEntity {
     public abstract String getRecipientId();
 
     public abstract MessageEntity mapRowToEntity(ResultSet rs);
+
+    public abstract List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException;
 }
