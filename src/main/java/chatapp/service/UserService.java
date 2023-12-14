@@ -147,7 +147,7 @@ public class UserService {
     public void unFriend(String user_id, String friend_id) throws Exception{
         try {
             if(!user_id.isEmpty() && !friend_id.isEmpty()){
-
+                repo.deleteFriend(user_id, friend_id);
             }
         }
         catch (Exception e){

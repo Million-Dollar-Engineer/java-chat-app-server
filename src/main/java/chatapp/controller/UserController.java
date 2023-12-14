@@ -127,6 +127,24 @@ public class UserController {
         }
     }
 
+    @PutMapping("/unfriend")
+    public ResponseEntity<String> unFriend(
+            @RequestBody FriendRequest friendRequest
+    ) {
+        try {
+            service.unFriend(friendRequest.user_id, friendRequest.friend_id);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"Friend or friend request was deleted\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
     @GetMapping("/friend-list")
     public ResponseEntity<String> getFriendList(@RequestBody UserEntity user) {
         try {
