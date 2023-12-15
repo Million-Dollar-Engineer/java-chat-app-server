@@ -121,8 +121,10 @@ public class UserEntity {
 
     static public String resultSetToJSON(ResultSet resultSet) throws SQLException {
         String res = "[ ";
+        int count = 0;
         try{
             while (resultSet.next()) {
+                if(count >= 1) res += ",";
                 UserEntity user = new UserEntity(
                         resultSet.getString("id"),
                         resultSet.getString("username"),
@@ -140,7 +142,7 @@ public class UserEntity {
                         resultSet.getString("updated_at")
                 );
                 res += user.toString();
-                res += ",";
+                count++;
             }
         }
         catch (Exception e){

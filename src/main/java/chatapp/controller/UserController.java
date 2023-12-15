@@ -1,7 +1,7 @@
 package chatapp.controller;
 
 
-import chatapp.entity.FriendRequest;
+import chatapp.entity.FriendRequestEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.UserRepository;
@@ -93,7 +93,7 @@ public class UserController {
 
     @PostMapping("/add-friend")
     public ResponseEntity<String> sendFriendRequest(
-            @RequestBody FriendRequest friendRequest
+            @RequestBody FriendRequestEntity friendRequest
             ) {
         try {
             service.saveFriendRequest(friendRequest.user_id, friendRequest.friend_id);
@@ -111,7 +111,7 @@ public class UserController {
 
     @PatchMapping("/accept-friend")
     public ResponseEntity<String> acceptFriendRequest(
-            @RequestBody FriendRequest friendRequest
+            @RequestBody FriendRequestEntity friendRequest
     ) {
         try {
             service.acceptFriendRequest(friendRequest.user_id, friendRequest.friend_id);
@@ -129,7 +129,7 @@ public class UserController {
 
     @PutMapping("/unfriend")
     public ResponseEntity<String> unFriend(
-            @RequestBody FriendRequest friendRequest
+            @RequestBody FriendRequestEntity friendRequest
     ) {
         try {
             service.unFriend(friendRequest.user_id, friendRequest.friend_id);

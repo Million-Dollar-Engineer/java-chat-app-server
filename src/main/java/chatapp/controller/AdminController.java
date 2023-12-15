@@ -3,10 +3,13 @@ package chatapp.controller;
 
 import chatapp.entity.UserEntity;
 import chatapp.repository.IAdminRepository;
+import chatapp.repository.IGroupChatRepository;
 import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.AdminRepository;
+import chatapp.repository.impl.GroupChatRepository;
 import chatapp.repository.impl.UserRepository;
 import chatapp.service.AdminService;
+import chatapp.service.GroupChatService;
 import chatapp.service.UserService;
 import chatapp.utils.Utils;
 import org.springframework.http.HttpStatus;
@@ -22,12 +25,18 @@ public class AdminController {
     public IUserRepository userRepo;
     public UserService userService;
 
+    public IGroupChatRepository groupChatRepo;
+    public GroupChatService groupChatService;
+
     public AdminController() {
         repo = new AdminRepository();
         service = new AdminService(repo);
 
         userRepo = new UserRepository();
         userService = new UserService(userRepo);
+
+        groupChatRepo = new GroupChatRepository();
+        groupChatService = new GroupChatService(groupChatRepo);
     }
 
     ResponseEntity<String> responseError(Exception e){
@@ -144,6 +153,21 @@ public class AdminController {
     public ResponseEntity<String> getFriendList(@PathVariable String user_id) {
         try {
             String jsonMessage = String.format("{\"friendList\":  %s }", "");
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("/group-chat")
+    public ResponseEntity<String> getGroupChatList(
+            @RequestParam(name = "sortBy", required = false) String sortBy
+    ) {
+        try {
+            String groupData = groupChatService.getGroupChatList(sortBy);
+            String jsonMessage = String.format("{\"groupList\":  %s }", groupData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
