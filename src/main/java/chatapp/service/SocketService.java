@@ -10,6 +10,6 @@ public class SocketService {
     }
 
     public void healthCheck() {
-        connectionEntity.writer.println("hello world");
+        connectionEntity.sendMessage("hello world");
     }
 }
