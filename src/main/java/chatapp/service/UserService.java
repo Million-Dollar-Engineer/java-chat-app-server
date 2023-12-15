@@ -165,4 +165,14 @@ public class UserService {
             throw e;
         }
     }
+
+    public String getOnlineFriendList(String user_id) throws  Exception{
+        try {
+            return repo.getOnlineFriend(user_id);
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
 }

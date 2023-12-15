@@ -82,7 +82,7 @@ public class UserRepository implements IUserRepository {
                     throw new Exception("Your account is banned");
                 }
                 id = res.getString("id");
-                String updateQuery = "UPDATE users SET last_active = ? WHERE id = ?";
+                String updateQuery = "UPDATE users SET last_active = ?, status = 'active' WHERE id = ?";
                 try (PreparedStatement statement = conn.prepareStatement(updateQuery)) {
                     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                     statement.setTimestamp(1, currentTimestamp);
@@ -142,6 +142,7 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    @Override
     public boolean checkExistFriendRequest(String user_id, String friend_id) throws SQLException{
         String query = "SELECT * FROM user_friends WHERE (user_id = ? AND friend_id = ?) "
                 + " OR (user_id = ? AND friend_id = ?)";
@@ -221,6 +222,37 @@ public class UserRepository implements IUserRepository {
         String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
                 "WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?) " +
                 "AND (uf.user_id = u.id OR uf.friend_id = u.id)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, user_id);
+            preparedStatement.setString(3, user_id);
+
+            res += "[";
+            ResultSet resultSet = preparedStatement.executeQuery();
+            int count = 0;
+            while (resultSet.next()){
+                if(count > 0) res+= ",";
+                res+= "{";
+                res+= ("\"username\": \"" + resultSet.getString("username") + "\" ,");
+                res+= ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
+                res+= "}";
+                count++;
+            }
+
+            res += "]";
+            return res;
+        } catch (SQLException e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
+    @Override
+    public String getOnlineFriend(String user_id) throws Exception{
+        String res = "";
+        String query = "SELECT u.username, u.full_name FROM user_friends uf, users u" +
+                " WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?)" +
+                " AND (uf.user_id = u.id OR uf.friend_id = u.id) AND u.status = 'active' ";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, user_id);
             preparedStatement.setString(2, user_id);
