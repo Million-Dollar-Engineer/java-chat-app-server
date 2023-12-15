@@ -9,5 +9,5 @@ public interface IMessageRepository {
 
     Result<MessageEntity> save(MessageEntity messageEntity);
 
-    Result<List<MessageEntity>> findMessagesByReceiverId(String receiverId);
+    Result<List<MessageEntity>> findMessages(MessageEntity messageEntity);
 }

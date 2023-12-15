@@ -3,12 +3,14 @@ package chatapp.repository.impl;
 import chatapp.dao.GroupMessageDAO;
 import chatapp.dao.MessageDAO;
 import chatapp.dao.PersonalMessageDAO;
+import chatapp.entity.GroupMessageEntity;
 import chatapp.entity.MessageEntity;
 import chatapp.entity.PersonalMessageEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.internal.result.Result;
 import chatapp.repository.IMessageRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +21,7 @@ public class MessageRepository implements IMessageRepository {
     public MessageRepository() {
         Postgres database = Postgres.getInstance();
         this.daoMap.put(PersonalMessageEntity.class, new PersonalMessageDAO(database.getConnection()));
-        this.daoMap.put(MessageEntity.class, new GroupMessageDAO(database.getConnection()));
+        this.daoMap.put(GroupMessageEntity.class, new GroupMessageDAO(database.getConnection()));
     }
 
     @Override
@@ -29,8 +31,9 @@ public class MessageRepository implements IMessageRepository {
     }
 
     @Override
-    public Result<List<MessageEntity>> findMessagesByReceiverId(String receiverId) {
-        return null;
+    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
+        MessageDAO messageDAO = createMessageDAO(messageEntity);
+        return Result.success(new ArrayList<>());
     }
 
     private MessageDAO createMessageDAO(MessageEntity messageEntity) {
