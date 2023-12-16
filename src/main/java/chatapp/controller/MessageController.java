@@ -1,12 +1,19 @@
 package chatapp.controller;
 
 import chatapp.entity.MessageEntity;
-import chatapp.entity.PersonalMessageEntity;
-import chatapp.internal.result.Result;
 import chatapp.repository.IMessageRepository;
 import chatapp.repository.impl.MessageRepository;
 import chatapp.service.MessageService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
+@RestController
+@RequestMapping("/message")
 public class MessageController {
     private final MessageService service;
 
@@ -15,25 +22,19 @@ public class MessageController {
         this.service = new MessageService(repository);
     }
 
-    public static void main(String[] args) {
-        MessageController controller = new MessageController();
-        controller.testSaveMessage();
+    public void saveMessage(MessageEntity messageEntity) {
+
     }
 
-    void testSaveMessage() {
-        MessageEntity messageEntity = new PersonalMessageEntity(
-                null,
-                "user1",
-                "user2",
-                "Hello, user2!",
-                null
-        );
-        
-        Result<MessageEntity> result = service.save(messageEntity);
-        if (result.getError() != null) {
-            System.out.println("Error occurred: " + result.getError().getMessage());
-        } else {
-            System.out.println("Message saved: " + result.getObject().getCreatedAt());
-        }
+    @GetMapping("/personal-history")
+    public ResponseEntity<Map<String, String>> personalHistory(@RequestParam String id) {
+
+        return null;
+    }
+
+    @GetMapping("/group-history")
+    public ResponseEntity<Map<String, String>> groupHistory(@RequestParam String id) {
+
+        return null;
     }
 }

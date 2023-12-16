@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Component
-public class ServerSocketComponent implements Runnable {
+public class SocketComponent implements Runnable {
     private static final Logger logger = AppLogger.getLogger();
     private static final Dotenv dotenv = Dotenv.load();
     private static final int portNumber = Integer.parseInt(Objects.requireNonNull(dotenv.get("SOCKET_PORT")));
@@ -29,7 +29,7 @@ public class ServerSocketComponent implements Runnable {
                     do {
                         Socket clientSocket = serverSocket.accept();
                         logger.log(Level.INFO, "Client connected: " + clientSocket);
-                        SocketCommunicateThread clientCommunicator = new SocketCommunicateThread(clientSocket);
+                        SocketThread clientCommunicator = new SocketThread(clientSocket);
                         clientCommunicator.start();
                     } while (this.serverSocket != null && !this.serverSocket.isClosed());
                 } catch (IOException e) {

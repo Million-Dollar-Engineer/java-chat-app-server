@@ -1,6 +1,6 @@
 package chatapp;
 
-import chatapp.socket.ServerSocketComponent;
+import chatapp.socket.SocketComponent;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +13,7 @@ public class Main implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        ServerSocketComponent server = new ServerSocketComponent();
+        SocketComponent server = new SocketComponent();
         server.run();
     }
 }
