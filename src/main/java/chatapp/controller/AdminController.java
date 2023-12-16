@@ -192,4 +192,21 @@ public class AdminController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/spam-reports")
+    public ResponseEntity<String> getSpamReports(
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "startTime", required = false) String startTime,
+            @RequestParam(name = "endTime", required = false) String endTime
+    ) {
+        try {
+            String spamReportData = service.getSpamReport(sortBy, startTime, endTime);
+            String jsonMessage = String.format("{\"spamReports\":  %s }", spamReportData);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

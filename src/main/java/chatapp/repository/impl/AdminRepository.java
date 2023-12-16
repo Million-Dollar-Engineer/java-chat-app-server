@@ -1,6 +1,7 @@
 package chatapp.repository.impl;
 
 
+import chatapp.entity.SpamReportEntity;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IAdminRepository;
@@ -120,6 +121,36 @@ public class AdminRepository implements IAdminRepository {
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             res = UserEntity.loginHistoriesResultSetToJSON(resultSet);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+        return res;
+    }
+
+    @Override
+    public String getSpamReportList(String sortBy, String startTime, String endTime) throws SQLException{
+        String res = "";
+
+        String query = "SELECT s.* FROM spam_reports s, users u WHERE s.accused_id=u.id  ";
+        if(startTime != null && endTime != null){
+            query += String.format(" AND s.created_at >= '%s' AND s.created_at <= '%s' ", startTime, endTime);
+        }
+        if(sortBy != null){
+
+            if(sortBy.equals("time")){
+                sortBy = "s.created_at";
+                query += (" ORDER BY " + sortBy);
+            }
+            else if(sortBy.equals("username")){
+                sortBy = "u.username";
+                query += (" ORDER BY " + sortBy);
+            }
+
+        }
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            res = SpamReportEntity.resultSetToJSON(resultSet);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

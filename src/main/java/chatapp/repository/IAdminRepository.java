@@ -10,4 +10,5 @@ public interface IAdminRepository {
     public void updateUser(UserEntity user) throws SQLException;
     public void deleteUser(String id) throws SQLException;
     public String getLoginHistories(String order) throws SQLException;
+    public String getSpamReportList(String sortBy, String startTime, String endTime) throws SQLException;
 }
