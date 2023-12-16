@@ -129,10 +129,14 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public String getSpamReportList(String sortBy, String startTime, String endTime) throws SQLException{
+    public String getSpamReportList(String sortBy, String startTime, String endTime, String username)
+            throws SQLException{
         String res = "";
 
         String query = "SELECT s.* FROM spam_reports s, users u WHERE s.accused_id=u.id  ";
+        if(username != null){
+            query += (" AND u.username ILIKE '%" + username + "%' ");
+        }
         if(startTime != null && endTime != null){
             query += String.format(" AND s.created_at >= '%s' AND s.created_at <= '%s' ", startTime, endTime);
         }

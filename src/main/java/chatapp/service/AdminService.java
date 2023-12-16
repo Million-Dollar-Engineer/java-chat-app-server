@@ -59,9 +59,9 @@ public class AdminService {
         }
     }
 
-    public String getSpamReport(String sortBy, String startTime, String endTime) throws Exception{
+    public String getSpamReport(String sortBy, String startTime, String endTime, String username) throws Exception{
         try {
-            return repo.getSpamReportList(sortBy, startTime, endTime);
+            return repo.getSpamReportList(sortBy, startTime, endTime, username);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

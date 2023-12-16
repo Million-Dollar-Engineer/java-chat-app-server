@@ -197,10 +197,11 @@ public class AdminController {
     public ResponseEntity<String> getSpamReports(
             @RequestParam(name = "sortBy", required = false) String sortBy,
             @RequestParam(name = "startTime", required = false) String startTime,
-            @RequestParam(name = "endTime", required = false) String endTime
+            @RequestParam(name = "endTime", required = false) String endTime,
+            @RequestParam(name = "username", required = false) String username
     ) {
         try {
-            String spamReportData = service.getSpamReport(sortBy, startTime, endTime);
+            String spamReportData = service.getSpamReport(sortBy, startTime, endTime, username);
             String jsonMessage = String.format("{\"spamReports\":  %s }", spamReportData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
