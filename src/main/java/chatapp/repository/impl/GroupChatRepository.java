@@ -21,8 +21,17 @@ public class GroupChatRepository implements IGroupChatRepository {
     }
 
     @Override
-    public String getGroupChatListByAdmin(String sortBy) throws SQLException{
-        String query = "SELECT * FROM chat_groups";
+    public String getGroupChatListByAdmin(String sortBy, String name) throws SQLException{
+        String query = "SELECT * FROM chat_groups ";
+        if(name != null){
+            query += "WHERE name ILIKE" + "'%" + name + "%' ";
+        }
+        if(sortBy.equals("time")){
+            query += "ORDER BY created_at DESC ";
+        }
+        else if(sortBy.equals("name")){
+            query += "ORDER BY name ";
+        }
         String res = "";
         try {
             Statement statement = conn.createStatement();

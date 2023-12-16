@@ -40,18 +40,18 @@ public class AdminRepository implements IAdminRepository {
             query += " WHERE ";
         }
         if (fullname != null) {
-            query += String.format(" fullname='%s' ", fullname);
+            query += " full_name ILIKE" + "'%" + fullname + "%'";
             count += 1;
         }
         if (username != null) {
             if (count > 0) query += " and ";
             count += 1;
-            query += String.format(" username='%s' ", username);
+            query += " username ILIKE" + "'%" + username + "%'";
         }
         if (status != null) {
             if (count > 0) query += " and ";
             count += 1;
-            query += String.format(" status='%s' ", status);
+            query += " status ILIKE" + "'%" + status + "%'";
         }
 
         System.out.println(query);

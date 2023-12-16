@@ -62,7 +62,7 @@ public class GroupChatEntity {
     public String toString() {
         return "{" +
                 "\"id\": \" " + id + '\"' +
-                ", \"username\": \" " + name + '\"' +
+                ", \"name\": \" " + name + '\"' +
                 ", \"created_at\": \" " + created_at + '\"' +
                 ", \"updated_at\": \" " + updated_at + '\"' +
                 ", \"deleted\": \" " + deleted + '\"' +
