@@ -34,25 +34,29 @@ public class AdminRepository implements IAdminRepository {
 
 
     @Override
-    public String getUserData(String fullname, String username, String status) throws Exception {
+    public String getUserData(String fullname, String username, String status, String sortBy, String order)
+            throws SQLException {
         String query = "SELECT * FROM users";
         int count = 0;
-        if (fullname != null || username != null || status != null) {
+        if (fullname != null || username != null || status != null || sortBy != null || order != null) {
             query += " WHERE ";
         }
         if (fullname != null) {
-            query += " full_name ILIKE" + "'%" + fullname + "%'";
+            query += " full_name ILIKE " + "'%" + fullname + "%' ";
             count += 1;
         }
         if (username != null) {
             if (count > 0) query += " and ";
             count += 1;
-            query += " username ILIKE" + "'%" + username + "%'";
+            query += " username ILIKE " + "'%" + username + "%'";
         }
         if (status != null) {
             if (count > 0) query += " and ";
             count += 1;
-            query += " status ILIKE" + "'%" + status + "%'";
+            query += " status ILIKE" + "'%" + status + "%' ";
+        }
+        if(sortBy != null){
+            query += " ORDER BY " + sortBy + " " + order + " ";
         }
 
         System.out.println(query);
