@@ -44,10 +44,13 @@ public class GroupChatRepository implements IGroupChatRepository {
     }
 
     @Override
-    public String getGroupChatMember(String group_id) throws SQLException {
+    public String getGroupChatMember(String group_id, String admin) throws SQLException {
         String query = "SELECT * FROM users u, chat_group_members cgm " +
                 "WHERE cgm.group_id = ? AND u.id = cgm.member_id ";
 
+        if(admin != null){
+            query += " AND cgm.member_role = 'admin' ";
+        }
         String res = "";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)){
             preparedStatement.setString(1, group_id);

@@ -179,10 +179,11 @@ public class AdminController {
 
     @GetMapping("/group-chat-member/{group_id}")
     public ResponseEntity<String> getGroupChatMember(
-            @PathVariable String group_id
+            @PathVariable String group_id,
+            @RequestParam(name = "admin", required = false) String admin
     ) {
         try {
-            String memberData = groupChatService.getGroupChatMember(group_id);
+            String memberData = groupChatService.getGroupChatMember(group_id, admin);
             String jsonMessage = String.format("{\"members\":  %s }", memberData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
