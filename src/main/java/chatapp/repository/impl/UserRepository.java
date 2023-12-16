@@ -9,6 +9,7 @@ import org.springframework.core.annotation.Order;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.UUID;
 
 public class UserRepository implements IUserRepository {
 
@@ -51,8 +52,11 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setBoolean(11, false);
             preparedStatement.setTimestamp(12, currentTimestamp);
             preparedStatement.setTimestamp(13, currentTimestamp);
-            preparedStatement.setString(14, user.getUsername() +
-                    user.getFullname().replace(" ", ""));
+
+            UUID uuid = UUID.randomUUID();
+            String uuidAsString = uuid.toString();
+
+            preparedStatement.setString(14, uuidAsString);
 
             preparedStatement.executeUpdate();
 
