@@ -19,4 +19,14 @@ public class GroupChatService {
             throw e;
         }
     }
+
+    public String getGroupChatMember(String group_id) throws Exception {
+        try {
+            return repo.getGroupChatMember(group_id);
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+    }
 }

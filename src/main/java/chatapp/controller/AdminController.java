@@ -176,4 +176,19 @@ public class AdminController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/group-chat-member/{group_id}")
+    public ResponseEntity<String> getGroupChatMember(
+            @PathVariable String group_id
+    ) {
+        try {
+            String memberData = groupChatService.getGroupChatMember(group_id);
+            String jsonMessage = String.format("{\"members\":  %s }", memberData);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }
