@@ -17,16 +17,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
+    public static UserService service;
     public IUserRepository repo;
-    public UserService service;
 
     UserController() {
         repo = new UserRepository();
         service = new UserService(repo);
     }
 
+    public static boolean isUserInGroup(String userId, String groupId) throws Exception {
+        return service.isUserInGroup(userId, groupId);
+    }
 
-    ResponseEntity<String> responseError(Exception e){
+    public static String getUserIdByUsername(String username) throws Exception {
+        return service.getUserIdByUsername(username);
+    }
+
+    ResponseEntity<String> responseError(Exception e) {
         String jsonMessage = String.format("{\"error\": \"%s\"}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", "application/json")
@@ -37,7 +44,6 @@ public class UserController {
     public String hello() {
         return "Hello user 123";
     }
-
 
     @PostMapping(path = "/signup")
     public ResponseEntity<String> createUser(@RequestBody UserEntity user) {
@@ -94,7 +100,7 @@ public class UserController {
     @PostMapping("/add-friend")
     public ResponseEntity<String> sendFriendRequest(
             @RequestBody FriendRequestEntity friendRequest
-            ) {
+    ) {
         try {
             service.saveFriendRequest(friendRequest.user_id, friendRequest.friend_id);
             String jsonMessage;

@@ -1,5 +1,6 @@
 package chatapp.socket;
 
+import chatapp.entity.ConnectionEntity;
 import chatapp.internal.logger.AppLogger;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Component;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,6 +19,7 @@ public class SocketComponent implements Runnable {
     private static final Dotenv dotenv = Dotenv.load();
     private static final int portNumber = Integer.parseInt(Objects.requireNonNull(dotenv.get("SOCKET_PORT")));
 
+    public static ArrayList<ConnectionEntity> connections = new ArrayList<>();
     private ServerSocket serverSocket;
 
     public void openServerSocket() {

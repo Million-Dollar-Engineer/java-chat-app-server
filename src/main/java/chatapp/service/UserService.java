@@ -120,59 +120,70 @@ public class UserService {
         }
     }
 
-    public void saveFriendRequest(String user_id, String friend_id) throws Exception{
+    public void saveFriendRequest(String user_id, String friend_id) throws Exception {
         try {
-            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+            if (!user_id.isEmpty() && !friend_id.isEmpty()) {
                 repo.saveFriendRequest(user_id, friend_id);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
     }
 
-    public void acceptFriendRequest(String user_id, String friend_id) throws Exception{
+    public void acceptFriendRequest(String user_id, String friend_id) throws Exception {
         try {
-            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+            if (!user_id.isEmpty() && !friend_id.isEmpty()) {
                 repo.acceptFriendRequest(user_id, friend_id);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
     }
 
-    public void unFriend(String user_id, String friend_id) throws Exception{
+    public void unFriend(String user_id, String friend_id) throws Exception {
         try {
-            if(!user_id.isEmpty() && !friend_id.isEmpty()){
+            if (!user_id.isEmpty() && !friend_id.isEmpty()) {
                 repo.deleteFriend(user_id, friend_id);
             }
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
     }
 
-    public String getFriendList(String user_id) throws  Exception{
+    public String getFriendList(String user_id) throws Exception {
         try {
             return repo.getFriendList(user_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
         }
     }
 
-    public String getOnlineFriendList(String user_id) throws  Exception{
+    public String getOnlineFriendList(String user_id) throws Exception {
         try {
             return repo.getOnlineFriend(user_id);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e);
             throw e;
+        }
+    }
+
+    public boolean isUserInGroup(String user_id, String group_id) throws Exception {
+        try {
+            return repo.isUserInGroup(user_id, group_id);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public String getUserIdByUsername(String username) throws Exception {
+        try {
+            return repo.getUserIdByUsername(username);
+        } catch (Exception e) {
+            return "";
         }
     }
 }

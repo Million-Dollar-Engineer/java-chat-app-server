@@ -19,23 +19,7 @@ public class PersonalMessageEntity extends MessageEntity {
         this.receiverId = receiverId;
     }
 
-    @Override
-    public String getRecipientId() {
-        return this.receiverId;
-    }
-
-    @Override
-    public void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, this.id);
-        preparedStatement.setString(2, this.senderId);
-        preparedStatement.setString(3, this.receiverId);
-        preparedStatement.setString(4, this.message);
-        preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
-    }
-
-
-    @Override
-    public MessageEntity mapRowToEntity(ResultSet rs) {
+    public static MessageEntity mapRowToEntity(ResultSet rs) {
         try {
             return new PersonalMessageEntity(
                     rs.getString("id"),
@@ -49,8 +33,7 @@ public class PersonalMessageEntity extends MessageEntity {
         }
     }
 
-    @Override
-    public List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
+    public static List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
         List<MessageEntity> list = new ArrayList<>();
 
         while (rs.next()) {
@@ -59,5 +42,19 @@ public class PersonalMessageEntity extends MessageEntity {
         }
 
         return list;
+    }
+
+    @Override
+    public String getRecipientId() {
+        return this.receiverId;
+    }
+
+    @Override
+    public void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, this.id);
+        preparedStatement.setString(2, this.senderId);
+        preparedStatement.setString(3, this.receiverId);
+        preparedStatement.setString(4, this.message);
+        preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
     }
 }
