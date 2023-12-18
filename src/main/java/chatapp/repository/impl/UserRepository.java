@@ -4,11 +4,9 @@ package chatapp.repository.impl;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
-import org.springframework.core.annotation.Order;
 
 import java.sql.*;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.UUID;
 
 public class UserRepository implements IUserRepository {
@@ -38,7 +36,7 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(4, user.getAddress());
 
             user.setDateOfBirth(user.getDateOfBirth() + " 00:00:00");
-            Timestamp timestamp= Timestamp.valueOf(user.getDateOfBirth());
+            Timestamp timestamp = Timestamp.valueOf(user.getDateOfBirth());
 
             preparedStatement.setTimestamp(5, timestamp);
             preparedStatement.setString(6, user.getSex());
@@ -78,7 +76,7 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(1, user.getUsername());
             preparedStatement.setString(2, user.getPassword());
             ResultSet res = preparedStatement.executeQuery();
-            if(!res.next()){
+            if (!res.next()) {
                 throw new Exception("Your username or password is incorrect");
             }
             do {
@@ -97,14 +95,13 @@ public class UserRepository implements IUserRepository {
                 }
 
                 String updateQuery1 = "INSERT INTO login_histories (user_id, ip_addr, login_time) VALUES(?, ?, ?)";
-                try(PreparedStatement statement = conn.prepareStatement(updateQuery1)){
+                try (PreparedStatement statement = conn.prepareStatement(updateQuery1)) {
                     Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
                     statement.setString(1, id);
                     statement.setString(2, IPaddr);
                     statement.setTimestamp(3, currentTimestamp);
                     statement.executeUpdate();
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     throw e;
                 }
             } while (res.next());
@@ -147,7 +144,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public boolean checkExistFriendRequest(String user_id, String friend_id) throws SQLException{
+    public boolean checkExistFriendRequest(String user_id, String friend_id) throws SQLException {
         String query = "SELECT * FROM user_friends WHERE (user_id = ? AND friend_id = ?) "
                 + " OR (user_id = ? AND friend_id = ?)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -157,7 +154,7 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(4, user_id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            if(!resultSet.next()){
+            if (!resultSet.next()) {
                 return false;
             }
 
@@ -169,7 +166,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void saveFriendRequest(String user_id, String friend_id) throws SQLException{
+    public void saveFriendRequest(String user_id, String friend_id) throws SQLException {
         String query = "INSERT INTO user_friends (user_id, friend_id, created_at, is_accepted)" +
                 " VALUES(?, ?, ?, ?)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -188,22 +185,21 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public void acceptFriendRequest(String user_id, String friend_id) throws SQLException{
+    public void acceptFriendRequest(String user_id, String friend_id) throws SQLException {
         String query = "UPDATE user_friends SET is_accepted = true WHERE user_id = ? and friend_id = ?";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, friend_id);
             preparedStatement.setString(2, user_id);
 
             preparedStatement.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
     }
 
     @Override
-    public void deleteFriend(String user_id, String friend_id) throws SQLException{
+    public void deleteFriend(String user_id, String friend_id) throws SQLException {
         String query = "DELETE FROM user_friends WHERE (user_id = ? and friend_id = ?) " +
                 " OR (user_id = ? and friend_id = ?) ";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
@@ -213,15 +209,14 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(4, user_id);
 
             preparedStatement.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             System.out.println(e);
             throw e;
         }
     }
 
     @Override
-    public String getFriendList(String user_id) throws SQLException{
+    public String getFriendList(String user_id) throws SQLException {
         String res = "";
         String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
                 "WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?) " +
@@ -234,12 +229,12 @@ public class UserRepository implements IUserRepository {
             res += "[";
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
-            while (resultSet.next()){
-                if(count > 0) res+= ",";
-                res+= "{";
-                res+= ("\"username\": \"" + resultSet.getString("username") + "\" ,");
-                res+= ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
-                res+= "}";
+            while (resultSet.next()) {
+                if (count > 0) res += ",";
+                res += "{";
+                res += ("\"username\": \"" + resultSet.getString("username") + "\" ,");
+                res += ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
+                res += "}";
                 count++;
             }
 
@@ -252,7 +247,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public String getOnlineFriend(String user_id) throws Exception{
+    public String getOnlineFriend(String user_id) throws Exception {
         String res = "";
         String query = "SELECT u.username, u.full_name FROM user_friends uf, users u" +
                 " WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?)" +
@@ -265,12 +260,12 @@ public class UserRepository implements IUserRepository {
             res += "[";
             ResultSet resultSet = preparedStatement.executeQuery();
             int count = 0;
-            while (resultSet.next()){
-                if(count > 0) res+= ",";
-                res+= "{";
-                res+= ("\"username\": \"" + resultSet.getString("username") + "\" ,");
-                res+= ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
-                res+= "}";
+            while (resultSet.next()) {
+                if (count > 0) res += ",";
+                res += "{";
+                res += ("\"username\": \"" + resultSet.getString("username") + "\" ,");
+                res += ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
+                res += "}";
                 count++;
             }
 
@@ -282,6 +277,32 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    public boolean isUserInGroup(String user_id, String group_id) throws SQLException {
+        String query = "SELECT * FROM chat_group_members WHERE member_id = ? AND group_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+            preparedStatement.setString(2, group_id);
 
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return false;
+            }
+        }
 
+        return true;
+    }
+
+    public String getUserIdByUsername(String username) throws SQLException {
+        String query = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return "";
+            } else {
+                return resultSet.getString("id");
+            }
+        }
+    }
 }

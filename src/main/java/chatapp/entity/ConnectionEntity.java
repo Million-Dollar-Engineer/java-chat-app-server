@@ -13,14 +13,14 @@ public class ConnectionEntity {
     private final PrintWriter writer;
 
     @Getter
-    private final String username;
+    private final String userId;
 
     public ConnectionEntity(Socket client) throws IOException {
         this.client = client;
         this.reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
         this.writer = new PrintWriter(client.getOutputStream(), true);
 
-        this.username = this.reader.readLine();
+        this.userId = this.reader.readLine();
     }
 
     public void sendMessage(String message) {

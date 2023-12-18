@@ -23,12 +23,13 @@ public class MessageController {
     }
 
     public void saveMessage(MessageEntity messageEntity) {
-
+        service.save(messageEntity);
     }
 
     @GetMapping("/personal-history")
-    public ResponseEntity<Map<String, String>> personalHistory(@RequestParam String id) {
-
+    public ResponseEntity<Map<String, String>> personalHistory(@RequestParam String senderId,
+                                                               @RequestParam String receiverUsername) {
+        System.out.println();
         return null;
     }
 
