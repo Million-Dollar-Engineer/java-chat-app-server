@@ -1,6 +1,7 @@
 package chatapp.repository.impl;
 
 
+import chatapp.entity.AdminEntity;
 import chatapp.entity.SpamReportEntity;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
@@ -165,4 +166,26 @@ public class AdminRepository implements IAdminRepository {
         }
         return res;
     }
+
+    @Override
+    public String getNumberOfUserEachMonth(int year)
+            throws SQLException{
+        String res = "";
+
+        String query = "SELECT EXTRACT (MONTH FROM u.created_at) as month, COUNT(*) as number_of_user FROM users u " +
+                " WHERE EXTRACT(YEAR FROM u.created_at) = ? " +
+                " GROUP BY EXTRACT (MONTH FROM u.created_at) ";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setInt(1, year);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            res = AdminEntity.numberOfUserEachMonthResultSetToJSON(resultSet);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+        return res;
+    }
+
+
 }

@@ -61,11 +61,11 @@ public class GroupChatEntity {
     @Override
     public String toString() {
         return "{" +
-                "\"id\": \" " + id + '\"' +
-                ", \"name\": \" " + name + '\"' +
-                ", \"created_at\": \" " + created_at + '\"' +
-                ", \"updated_at\": \" " + updated_at + '\"' +
-                ", \"deleted\": \" " + deleted + '\"' +
+                "\"id\": \"" + id + '\"' +
+                ", \"name\": \"" + name + '\"' +
+                ", \"created_at\": \"" + created_at + '\"' +
+                ", \"updated_at\": \"" + updated_at + '\"' +
+                ", \"deleted\": \"" + deleted + '\"' +
                 '}';
     }
 

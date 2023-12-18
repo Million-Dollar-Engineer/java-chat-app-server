@@ -160,10 +160,10 @@ public class UserEntity {
                 String tmp = "";
                 tmp += "{";
                 tmp += (
-                        "\"username\": \" " + resultSet.getString("username")+ '\"' +
-                                ", \"fullname\": \" " + resultSet.getString("full_name") + '\"' +
-                                ", \"ip\": \" " + resultSet.getString("ip_addr") + '\"' +
-                                ", \"login_time\": \" " + resultSet.getString("login_time") + '\"'
+                        "\"username\": \"" + resultSet.getString("username")+ '\"' +
+                                ", \"fullname\": \"" + resultSet.getString("full_name") + '\"' +
+                                ", \"ip\": \"" + resultSet.getString("ip_addr") + '\"' +
+                                ", \"login_time\": \"" + resultSet.getString("login_time") + '\"'
                         );
                 tmp += "}";
                 res += tmp;
@@ -181,20 +181,20 @@ public class UserEntity {
     @Override
     public String toString() {
         return "{" +
-                "\"id\": \" " + id + '\"' +
-                ", \"username\": \" " + username + '\"' +
-                ", \"password\": \" " + password + '\"' +
-                ", \"fullname\": \" " + fullname + '\"' +
-                ", \"address\": \" " + address + '\"' +
-                ", \"dateOfBirth\": \" " + dateOfBirth + '\"' +
-                ", \"sex\": \" " + sex + '\"' +
-                ", \"email\": \" " + email + '\"' +
-                ", \"role\": \" " + role + '\"' +
-                ", \"status\": \" " + status + '\"' +
-                ", \"last_active\": \" " + last_active + '\"' +
-                ", \"deleted\": \" " + deleted + '\"' +
-                ", \"created_at\": \" " + created_at + '\"' +
-                ", \"updated_at\": \" " + updated_at + '\"' +
+                "\"id\": \"" + id + '\"' +
+                ", \"username\": \"" + username + '\"' +
+                ", \"password\": \"" + password + '\"' +
+                ", \"fullname\": \"" + fullname + '\"' +
+                ", \"address\": \"" + address + '\"' +
+                ", \"dateOfBirth\": \"" + dateOfBirth + '\"' +
+                ", \"sex\": \"" + sex + '\"' +
+                ", \"email\": \"" + email + '\"' +
+                ", \"role\": \"" + role + '\"' +
+                ", \"status\": \"" + status + '\"' +
+                ", \"last_active\": \"" + last_active + '\"' +
+                ", \"deleted\": \"" + deleted + '\"' +
+                ", \"created_at\": \"" + created_at + '\"' +
+                ", \"updated_at\": \"" + updated_at + '\"' +
                 '}';
     }
 }

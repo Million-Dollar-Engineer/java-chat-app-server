@@ -212,4 +212,19 @@ public class AdminController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/users-each-month")
+    public ResponseEntity<String> getSpamReports(
+            @RequestParam(name = "year", required = true) int year
+    ) {
+        try {
+            String numberOfUserData = service.getNumberOfUserEachMonth(year);
+            String jsonMessage = String.format("{\"data\":  %s }", numberOfUserData);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

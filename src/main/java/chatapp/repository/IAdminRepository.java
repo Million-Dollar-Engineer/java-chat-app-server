@@ -13,4 +13,6 @@ public interface IAdminRepository {
     public String getLoginHistories(String order) throws SQLException;
     public String getSpamReportList(String sortBy, String startTime, String endTime, String username)
             throws SQLException;
+    public String getNumberOfUserEachMonth(int year)
+            throws SQLException;
 }

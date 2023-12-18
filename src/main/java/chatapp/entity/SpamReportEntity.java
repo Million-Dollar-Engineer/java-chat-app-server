@@ -61,11 +61,11 @@ public class SpamReportEntity {
     @Override
     public String toString() {
         return "{" +
-                "\"id\": \" " + id + '\"' +
-                ", \"reporter_id\": \" " + reporter_id + '\"' +
-                ", \"accused_id\": \" " + accused_id + '\"' +
-                ", \"reason\": \" " + reason + '\"' +
-                ", \"created_at\": \" " + created_at + '\"' +
+                "\"id\": \"" + id + '\"' +
+                ", \"reporter_id\": \"" + reporter_id + '\"' +
+                ", \"accused_id\": \"" + accused_id + '\"' +
+                ", \"reason\": \"" + reason + '\"' +
+                ", \"created_at\": \"" + created_at + '\"' +
                 '}';
     }
 
@@ -93,4 +93,6 @@ public class SpamReportEntity {
         res += " ]";
         return res;
     }
+
+
 }
