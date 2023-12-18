@@ -1,5 +1,6 @@
 package chatapp.entity;
 
+import chatapp.security.AESEncryption;
 import lombok.Getter;
 
 import java.sql.PreparedStatement;
@@ -14,12 +15,12 @@ import java.util.List;
 public class GroupMessageEntity extends MessageEntity {
     private final String groupId;
 
-    public GroupMessageEntity(String id, String sender, String groupId, String message, LocalDateTime createdAt) {
+    public GroupMessageEntity(String id, String sender, String groupId, String message, LocalDateTime createdAt) throws Exception {
         super(id, sender, message, createdAt);
         this.groupId = groupId;
     }
 
-    public GroupMessageEntity(String groupId) {
+    public GroupMessageEntity(String groupId) throws Exception {
         super("", "", "", null);
         this.groupId = groupId;
     }
@@ -41,10 +42,10 @@ public class GroupMessageEntity extends MessageEntity {
                     rs.getString("id"),
                     rs.getString("sender_id"),
                     rs.getString("group_id"),
-                    rs.getString("message"),
+                    AESEncryption.decrypt(rs.getString("message")),
                     rs.getTimestamp("created_at").toLocalDateTime()
             );
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }

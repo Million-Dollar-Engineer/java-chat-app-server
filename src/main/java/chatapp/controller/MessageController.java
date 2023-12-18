@@ -1,5 +1,6 @@
 package chatapp.controller;
 
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.GroupMessageEntity;
 import chatapp.entity.MessageEntity;
 import chatapp.entity.PersonalMessageEntity;
@@ -29,31 +30,26 @@ public class MessageController {
     }
 
     @GetMapping("/personal-history")
-    public List<MessageEntity> personalHistory(@RequestParam String senderId,
-                                               @RequestParam String receiverUsername) throws Exception {
+    public List<MessageHistoryResponse> personalHistory(@RequestParam String senderId,
+                                                        @RequestParam String receiverUsername) throws Exception {
 
         String receiverId = UserController.getUserIdByUsername(receiverUsername);
         MessageEntity messageEntity = new PersonalMessageEntity("", senderId, receiverId, "", null);
-        Result<List<MessageEntity>> result = service.findMessages(messageEntity);
+        Result<List<MessageHistoryResponse>> result = service.findMessages(messageEntity);
 
         if (result.getError() != null) {
             throw result.getError();
-        }
-
-        for (MessageEntity message : result.getObject()) {
-            PersonalMessageEntity personalMessage = (PersonalMessageEntity) message;
-            System.out.println(personalMessage.getMessage());
         }
 
         return result.getObject();
     }
 
     @GetMapping("/group-history")
-    public List<MessageEntity> groupHistory(@RequestParam String id) throws Exception {
+    public List<MessageHistoryResponse> groupHistory(@RequestParam String id) throws Exception {
 
         MessageEntity messageEntity = new GroupMessageEntity("", "", id, "", null);
 
-        Result<List<MessageEntity>> result = service.findMessages(messageEntity);
+        Result<List<MessageHistoryResponse>> result = service.findMessages(messageEntity);
 
         if (result.getError() != null) {
             throw result.getError();

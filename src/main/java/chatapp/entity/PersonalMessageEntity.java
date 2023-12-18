@@ -14,7 +14,7 @@ import java.util.List;
 public class PersonalMessageEntity extends MessageEntity {
     private final String receiverId;
 
-    public PersonalMessageEntity(String id, String sender, String receiverId, String message, LocalDateTime createdAt) {
+    public PersonalMessageEntity(String id, String sender, String receiverId, String message, LocalDateTime createdAt) throws Exception {
         super(id, sender, message, createdAt);
         this.receiverId = receiverId;
     }
@@ -28,7 +28,7 @@ public class PersonalMessageEntity extends MessageEntity {
                     rs.getString("message"),
                     rs.getTimestamp("created_at").toLocalDateTime()
             );
-        } catch (SQLException e) {
+        } catch (Exception e) {
             return null;
         }
     }

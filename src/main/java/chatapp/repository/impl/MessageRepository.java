@@ -3,6 +3,7 @@ package chatapp.repository.impl;
 import chatapp.dao.GroupMessageDAO;
 import chatapp.dao.MessageDAO;
 import chatapp.dao.PersonalMessageDAO;
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.GroupMessageEntity;
 import chatapp.entity.MessageEntity;
 import chatapp.entity.PersonalMessageEntity;
@@ -30,7 +31,7 @@ public class MessageRepository implements IMessageRepository {
     }
 
     @Override
-    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
+    public Result<List<MessageHistoryResponse>> findMessages(MessageEntity messageEntity) {
         MessageDAO messageDAO = createMessageDAO(messageEntity);
         return messageDAO.findMessages(messageEntity);
     }

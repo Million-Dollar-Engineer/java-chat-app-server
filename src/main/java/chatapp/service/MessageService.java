@@ -1,5 +1,6 @@
 package chatapp.service;
 
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.MessageEntity;
 import chatapp.internal.result.Result;
 import chatapp.repository.IMessageRepository;
@@ -37,7 +38,7 @@ public class MessageService {
         return str == null || str.trim().isEmpty();
     }
 
-    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
+    public Result<List<MessageHistoryResponse>> findMessages(MessageEntity messageEntity) {
         return repo.findMessages(messageEntity);
     }
 }

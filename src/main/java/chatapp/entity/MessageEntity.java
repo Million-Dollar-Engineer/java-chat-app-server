@@ -1,6 +1,7 @@
 package chatapp.entity;
 
 
+import chatapp.security.AESEncryption;
 import lombok.Getter;
 
 import java.sql.PreparedStatement;
@@ -18,10 +19,10 @@ public abstract class MessageEntity {
     protected String id; // unique id of the message
     protected LocalDateTime createdAt; // time when the message was sent
 
-    public MessageEntity(String id, String senderId, String message, LocalDateTime createdAt) {
+    public MessageEntity(String id, String senderId, String message, LocalDateTime createdAt) throws Exception {
         this.id = (id != null && !id.isEmpty()) ? id : java.util.UUID.randomUUID().toString();
         this.senderId = Objects.requireNonNull(senderId, "senderId must not be null");
-        this.message = Objects.requireNonNull(message, "message must not be null");
+        this.message = Objects.requireNonNull(AESEncryption.encrypt(message), "message must not be null");
         this.createdAt = (createdAt != null) ? createdAt : LocalDateTime.now();
     }
 
