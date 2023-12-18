@@ -4,6 +4,8 @@ import chatapp.entity.MessageEntity;
 import chatapp.internal.result.Result;
 import chatapp.repository.IMessageRepository;
 
+import java.util.List;
+
 public class MessageService {
     private final IMessageRepository repo;
 
@@ -33,5 +35,9 @@ public class MessageService {
 
     private boolean isNullOrEmpty(String str) {
         return str == null || str.trim().isEmpty();
+    }
+
+    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
+        return repo.findMessages(messageEntity);
     }
 }

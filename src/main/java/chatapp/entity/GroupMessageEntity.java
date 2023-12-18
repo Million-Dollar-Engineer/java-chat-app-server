@@ -19,23 +19,23 @@ public class GroupMessageEntity extends MessageEntity {
         this.groupId = groupId;
     }
 
-    @Override
-    public String getRecipientId() {
-        return this.groupId;
+    public GroupMessageEntity(String groupId) {
+        super("", "", "", null);
+        this.groupId = groupId;
     }
 
+    public static List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
+        List<MessageEntity> list = new ArrayList<>();
 
-    @Override
-    public void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException {
-        preparedStatement.setString(1, this.id);
-        preparedStatement.setString(2, this.senderId);
-        preparedStatement.setString(3, this.groupId);
-        preparedStatement.setString(4, this.message);
-        preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
+        while (rs.next()) {
+            MessageEntity entity = mapRowToEntity(rs);
+            list.add(entity);
+        }
+
+        return list;
     }
 
-    @Override
-    public MessageEntity mapRowToEntity(ResultSet rs) {
+    public static MessageEntity mapRowToEntity(ResultSet rs) {
         try {
             return new GroupMessageEntity(
                     rs.getString("id"),
@@ -50,14 +50,16 @@ public class GroupMessageEntity extends MessageEntity {
     }
 
     @Override
-    public List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
-        List<MessageEntity> list = new ArrayList<>();
+    public String getRecipientId() {
+        return this.groupId;
+    }
 
-        while (rs.next()) {
-            MessageEntity entity = mapRowToEntity(rs);
-            list.add(entity);
-        }
-
-        return list;
+    @Override
+    public void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException {
+        preparedStatement.setString(1, this.id);
+        preparedStatement.setString(2, this.senderId);
+        preparedStatement.setString(3, this.groupId);
+        preparedStatement.setString(4, this.message);
+        preparedStatement.setTimestamp(5, Timestamp.valueOf(this.createdAt));
     }
 }

@@ -25,11 +25,15 @@ public abstract class MessageEntity {
         this.createdAt = (createdAt != null) ? createdAt : LocalDateTime.now();
     }
 
+    public static List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException {
+        return null;
+    }
+
+    public static MessageEntity mapRowToEntity(ResultSet rs) {
+        return null;
+    }
+
     public abstract void setPreparedStatementParameters(PreparedStatement preparedStatement) throws SQLException;
 
     public abstract String getRecipientId();
-
-    public abstract MessageEntity mapRowToEntity(ResultSet rs);
-
-    public abstract List<MessageEntity> mapRSToListEntity(ResultSet rs) throws SQLException;
 }

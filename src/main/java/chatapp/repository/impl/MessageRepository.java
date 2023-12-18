@@ -10,7 +10,6 @@ import chatapp.internal.database.Postgres;
 import chatapp.internal.result.Result;
 import chatapp.repository.IMessageRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class MessageRepository implements IMessageRepository {
     @Override
     public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
         MessageDAO messageDAO = createMessageDAO(messageEntity);
-        return Result.success(new ArrayList<>());
+        return messageDAO.findMessages(messageEntity);
     }
 
     private MessageDAO createMessageDAO(MessageEntity messageEntity) {
