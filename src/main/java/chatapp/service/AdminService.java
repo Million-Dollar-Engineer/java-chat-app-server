@@ -88,4 +88,13 @@ public class AdminService {
         }
     }
 
+    public String getNumberOfUserActiveEachMonth(int year) throws Exception{
+        try {
+            return repo.getNumberOfUserActiveEachMonth(year);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

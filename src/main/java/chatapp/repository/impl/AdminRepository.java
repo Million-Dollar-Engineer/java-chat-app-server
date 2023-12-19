@@ -226,5 +226,23 @@ public class AdminRepository implements IAdminRepository {
         return res;
     }
 
+    public String getNumberOfUserActiveEachMonth(int year)
+            throws SQLException{
+        String res = "";
+
+        String query = "SELECT EXTRACT (MONTH FROM u.last_active) as month, COUNT(*) as number_of_user FROM users u " +
+                " WHERE EXTRACT(YEAR FROM u.last_active) = ? " +
+                " GROUP BY EXTRACT (MONTH FROM u.last_active) ";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setInt(1, year);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            res = AdminEntity.numberOfUserEachMonthResultSetToJSON(resultSet);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+        return res;
+    }
 
 }

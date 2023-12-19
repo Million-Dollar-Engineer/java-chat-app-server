@@ -214,7 +214,7 @@ public class AdminController {
     }
 
     @GetMapping("/users-each-month")
-    public ResponseEntity<String> getSpamReports(
+    public ResponseEntity<String> getUserCreatedEachMonth(
             @RequestParam(name = "year", required = true) int year
     ) {
         try {
@@ -240,6 +240,21 @@ public class AdminController {
         try {
             String data = service.getNumberOfFriendAndFOF(sortBy, order, name, greaterThan, lowerThan, equal);
             String jsonMessage = String.format("{\"data\":  %s }", data);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("/users-active-each-month")
+    public ResponseEntity<String> getUserActiveEachMonth(
+            @RequestParam(name = "year", required = true) int year
+    ) {
+        try {
+            String numberOfUserData = service.getNumberOfUserActiveEachMonth(year);
+            String jsonMessage = String.format("{\"data\":  %s }", numberOfUserData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
