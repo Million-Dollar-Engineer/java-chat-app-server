@@ -35,6 +35,7 @@ public class SocketThread extends Thread {
 
                 if (header == null) {
                     client.close();
+                    SocketComponent.connections.remove(client);
                 }
 
                 switch (Objects.requireNonNull(header)) {

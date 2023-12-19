@@ -26,7 +26,6 @@ public class User {
     public static List<User> mapRSToListEntity(ResultSet rs) throws SQLException {
         List<User> users = new ArrayList<>();
         while (rs.next()) {
-            System.out.println(rs.getString("full_name") + " " + rs.getString("username"));
             users.add(mapRowToEntity(rs));
         }
 
