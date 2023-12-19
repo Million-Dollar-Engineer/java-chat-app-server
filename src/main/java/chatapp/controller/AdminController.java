@@ -230,9 +230,15 @@ public class AdminController {
 
     @GetMapping("/friend-and-fof")
     public ResponseEntity<String> getFriendsAndFriendsOfFriends(
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "username", required = false) String name,
+            @RequestParam(name = "equal", required = false) String equal,
+            @RequestParam(name = "greaterThan", required = false) String greaterThan,
+            @RequestParam(name = "lowerThan", required = false) String lowerThan
     ) {
         try {
-            String data = service.getNumberOfFriendAndFOF();
+            String data = service.getNumberOfFriendAndFOF(sortBy, order, name, greaterThan, lowerThan, equal);
             String jsonMessage = String.format("{\"data\":  %s }", data);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

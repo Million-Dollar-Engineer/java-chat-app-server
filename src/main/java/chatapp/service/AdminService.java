@@ -78,9 +78,10 @@ public class AdminService {
         }
     }
 
-    public String getNumberOfFriendAndFOF() throws Exception{
+    public String getNumberOfFriendAndFOF(String sortBy, String order, String name, String greaterThan,
+                                          String lowerThan, String equal) throws Exception{
         try {
-            return repo.getFriendAndFriendOfFriends();
+            return repo.getFriendAndFriendOfFriends(sortBy, order, name, greaterThan, lowerThan, equal);
         } catch (Exception e) {
             System.out.println(e);
             throw e;
