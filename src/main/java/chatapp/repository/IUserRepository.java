@@ -1,9 +1,11 @@
 package chatapp.repository;
 
 
+import chatapp.dto.User;
 import chatapp.entity.UserEntity;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public interface IUserRepository {
     public void createUser(UserEntity user) throws SQLException, Exception;
@@ -22,7 +24,7 @@ public interface IUserRepository {
 
     public void deleteFriend(String user_id, String friend_id) throws SQLException;
 
-    public String getFriendList(String user_id) throws SQLException;
+    public List<User> getFriendList(String user_id) throws SQLException;
 
     public String getOnlineFriend(String user_id) throws Exception;
 

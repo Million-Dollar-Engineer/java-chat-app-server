@@ -1,6 +1,7 @@
 package chatapp.controller;
 
 
+import chatapp.dto.User;
 import chatapp.entity.FriendRequestEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
@@ -11,6 +12,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -152,19 +155,8 @@ public class UserController {
     }
 
     @GetMapping("/friend-list")
-    public ResponseEntity<String> getFriendList(@RequestBody UserEntity user) {
-        try {
-            String friendListData = service.getFriendList(user.getId());
-            String jsonMessage;
-            jsonMessage = String.format("{\"friendList\": %s }", friendListData);
-
-            return ResponseEntity
-                    .ok()
-                    .header("Content-Type", "application/json").
-                    body(jsonMessage);
-        } catch (Exception e) {
-            return responseError(e);
-        }
+    public List<User> getFriendList(@RequestParam String id) throws Exception {
+        return service.getFriendList(id);
     }
 
     @GetMapping("/online-friend-list")
