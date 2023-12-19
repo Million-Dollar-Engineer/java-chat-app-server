@@ -187,5 +187,32 @@ public class AdminRepository implements IAdminRepository {
         return res;
     }
 
+    public String getFriendAndFriendOfFriends() throws SQLException{
+        String res = "";
+
+        String query = "SELECT u1.id u_id,(SELECT COUNT(*)\n" +
+                "\t\t\tFROM user_friends uf JOIN users u ON ( uf.is_accepted= true AND (uf.user_id = u.id OR uf.friend_id = u.id))\n" +
+                "\t\t\tWHERE u.id = u1.id\n" +
+                "\t\t\tGROUP BY u.id) friend, (SELECT COUNT(*)\n" +
+                "\t\t\t\t\t\t\tFROM (SELECT u2.id, u3.id friend_id\n" +
+                "\t\t\t\t\t\t\t\t\tFROM users u3, user_friends uf JOIN users u2 ON ( uf.is_accepted= true AND (uf.user_id = u2.id OR uf.friend_id = u2.id))\n" +
+                "\t\t\t\t\t\t\t\t\tWHERE (u3.id = uf.friend_id OR u3.id = uf.user_id) AND u3.id != u2.id) TMP, user_friends uf3\n" +
+                "\t\t\t\t\t\t\tWHERE (TMP.friend_id = uf3.user_id OR TMP.friend_id = uf3.friend_id) AND uf3.is_accepted = true AND TMP.id = u1.id\n" +
+                "\t\t\t\t\t\t\tGROUP BY TMP.id) fof\n" +
+                "FROM users u1";
+
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                System.out.println("AAAAA");
+            }
+            res = AdminEntity.FriendAndFOFResultSetToJSON(resultSet);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+        return res;
+    }
+
 
 }

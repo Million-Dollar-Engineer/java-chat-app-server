@@ -78,4 +78,13 @@ public class AdminService {
         }
     }
 
+    public String getNumberOfFriendAndFOF() throws Exception{
+        try {
+            return repo.getFriendAndFriendOfFriends();
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

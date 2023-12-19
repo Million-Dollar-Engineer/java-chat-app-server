@@ -48,4 +48,31 @@ public class AdminEntity {
         res += " ]";
         return res;
     }
+    static public String FriendAndFOFResultSetToJSON(ResultSet resultSet) throws SQLException {
+        String res = "[ ";
+        int count = 0;
+        try{
+            while (resultSet.next()) {
+                if(count >= 1) res += ",";
+                int f = 0;
+                int fof = 0;
+                f = resultSet.getInt("friend");
+                fof = resultSet.getInt("fof");
+                res += "{" +
+                        "\"id\": \"" + resultSet.getString("u_id") + '\"' +
+                        ", \"friend\": \"" + f + '\"' +
+                        ", \"friendOfFriend\": \"" + fof + '\"' +
+                        '}';
+                count++;
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+        res += " ]";
+        return res;
+    }
+
+
 }

@@ -227,4 +227,18 @@ public class AdminController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/friend-and-fof")
+    public ResponseEntity<String> getFriendsAndFriendsOfFriends(
+    ) {
+        try {
+            String data = service.getNumberOfFriendAndFOF();
+            String jsonMessage = String.format("{\"data\":  %s }", data);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

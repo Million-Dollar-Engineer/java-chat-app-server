@@ -15,4 +15,5 @@ public interface IAdminRepository {
             throws SQLException;
     public String getNumberOfUserEachMonth(int year)
             throws SQLException;
+    public String getFriendAndFriendOfFriends() throws SQLException;
 }
