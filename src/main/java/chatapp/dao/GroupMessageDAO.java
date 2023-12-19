@@ -1,5 +1,6 @@
 package chatapp.dao;
 
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.GroupMessageEntity;
 import chatapp.entity.MessageEntity;
 import chatapp.internal.result.Result;
@@ -30,15 +31,16 @@ public class GroupMessageDAO implements MessageDAO {
     }
 
     @Override
-    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
-        String query = "SELECT * FROM group_messages WHERE group_id = ?";
+    public Result<List<MessageHistoryResponse>> findMessages(MessageEntity messageEntity) {
+        // get user full name
+        String query = "";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, messageEntity.getRecipientId());
             preparedStatement.executeQuery();
             ResultSet resultSet = preparedStatement.getResultSet();
 
             List<MessageEntity> messages = GroupMessageEntity.mapRSToListEntity(resultSet);
-            return Result.success(messages);
+            return null;
         } catch (SQLException e) {
             return Result.failure(e);
         }

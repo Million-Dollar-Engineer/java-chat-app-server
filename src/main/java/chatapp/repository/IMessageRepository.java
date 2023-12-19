@@ -1,5 +1,6 @@
 package chatapp.repository;
 
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.MessageEntity;
 import chatapp.internal.result.Result;
 
@@ -9,5 +10,5 @@ public interface IMessageRepository {
 
     Result<MessageEntity> save(MessageEntity messageEntity);
 
-    Result<List<MessageEntity>> findMessages(MessageEntity messageEntity);
+    Result<List<MessageHistoryResponse>> findMessages(MessageEntity messageEntity);
 }

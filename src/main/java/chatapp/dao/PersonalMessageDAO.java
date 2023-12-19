@@ -1,7 +1,7 @@
 package chatapp.dao;
 
+import chatapp.dto.MessageHistoryResponse;
 import chatapp.entity.MessageEntity;
-import chatapp.entity.PersonalMessageEntity;
 import chatapp.internal.result.Result;
 
 import java.sql.Connection;
@@ -30,8 +30,13 @@ public class PersonalMessageDAO implements MessageDAO {
     }
 
     @Override
-    public Result<List<MessageEntity>> findMessages(MessageEntity messageEntity) {
-        String query = "SELECT * FROM personal_messages WHERE (sender_id = ? AND receiver_id = ?) OR (sender_id = ? AND receiver_id = ?) ORDER BY created_at DESC ";
+    public Result<List<MessageHistoryResponse>> findMessages(MessageEntity messageEntity) {
+        // Get user full name of sender and receiver, message and created_at
+        String query = "SELECT pm.id, pm.sender_id, pm.receiver_id, pm.message, pm.created_at, u1.full_name" +
+                " AS sender_full_name, u2.full_name AS receiver_full_name FROM personal_messages pm" +
+                " INNER JOIN users u1 ON pm.sender_id = u1.id INNER JOIN users u2 ON pm.receiver_id = u2.id " +
+                "WHERE (pm.sender_id = ? AND pm.receiver_id = ?) OR (pm.sender_id = ? AND pm.receiver_id = ?) " +
+                "ORDER BY pm.created_at ASC";
         try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setString(1, messageEntity.getSenderId());
             preparedStatement.setString(2, messageEntity.getRecipientId());
@@ -39,8 +44,11 @@ public class PersonalMessageDAO implements MessageDAO {
             preparedStatement.setString(4, messageEntity.getSenderId());
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            return Result.success(PersonalMessageEntity.mapRSToListEntity(resultSet));
-        } catch (SQLException e) {
+
+            List<MessageHistoryResponse> messageHistoryResponses = MessageHistoryResponse.fromResultSet(resultSet);
+
+            return Result.success(messageHistoryResponses);
+        } catch (Exception e) {
             return Result.failure(e);
         }
     }
