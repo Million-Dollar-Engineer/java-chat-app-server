@@ -1,12 +1,14 @@
 package chatapp.repository.impl;
 
 
+import chatapp.dto.User;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
 
 import java.sql.*;
 import java.text.ParseException;
+import java.util.List;
 import java.util.UUID;
 
 public class UserRepository implements IUserRepository {
@@ -216,7 +218,7 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public String getFriendList(String user_id) throws SQLException {
+    public List<User> getFriendList(String user_id) throws SQLException {
         String res = "";
         String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
                 "WHERE u.id != ? AND uf.is_accepted= true AND (uf.user_id = ? OR uf.friend_id = ?) " +
@@ -226,22 +228,9 @@ public class UserRepository implements IUserRepository {
             preparedStatement.setString(2, user_id);
             preparedStatement.setString(3, user_id);
 
-            res += "[";
             ResultSet resultSet = preparedStatement.executeQuery();
-            int count = 0;
-            while (resultSet.next()) {
-                if (count > 0) res += ",";
-                res += "{";
-                res += ("\"username\": \"" + resultSet.getString("username") + "\" ,");
-                res += ("\"fullname\": \"" + resultSet.getString("full_name") + "\"");
-                res += "}";
-                count++;
-            }
-
-            res += "]";
-            return res;
+            return User.mapRSToListEntity(resultSet);
         } catch (SQLException e) {
-            System.out.println(e);
             throw e;
         }
     }

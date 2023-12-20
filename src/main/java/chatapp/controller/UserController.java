@@ -1,16 +1,22 @@
 package chatapp.controller;
 
 
+import chatapp.dto.User;
+import chatapp.entity.ConnectionEntity;
 import chatapp.entity.FriendRequestEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.UserRepository;
 import chatapp.service.UserService;
+import chatapp.socket.SocketComponent;
 import chatapp.utils.Utils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
@@ -152,34 +158,23 @@ public class UserController {
     }
 
     @GetMapping("/friend-list")
-    public ResponseEntity<String> getFriendList(@RequestBody UserEntity user) {
-        try {
-            String friendListData = service.getFriendList(user.getId());
-            String jsonMessage;
-            jsonMessage = String.format("{\"friendList\": %s }", friendListData);
-
-            return ResponseEntity
-                    .ok()
-                    .header("Content-Type", "application/json").
-                    body(jsonMessage);
-        } catch (Exception e) {
-            return responseError(e);
-        }
+    public List<User> getFriendList(@RequestParam String id) throws Exception {
+        return service.getFriendList(id);
     }
 
     @GetMapping("/online-friend-list")
-    public ResponseEntity<String> getOnlineFriendList(@RequestBody UserEntity user) {
-        try {
-            String friendListData = service.getOnlineFriendList(user.getId());
-            String jsonMessage;
-            jsonMessage = String.format("{\"friendList\": %s }", friendListData);
-
-            return ResponseEntity
-                    .ok()
-                    .header("Content-Type", "application/json").
-                    body(jsonMessage);
-        } catch (Exception e) {
-            return responseError(e);
+    public List<User> getOnlineFriendList(@RequestParam String id) throws Exception {
+        List<User> friends = service.getFriendList(id);
+        List<User> result = new ArrayList<>();
+        for (User friend : friends) {
+            for (ConnectionEntity connection : SocketComponent.connections) {
+                String friendId = UserController.getUserIdByUsername(friend.getUserName());
+                if (connection.getUserId().equals(friendId)) {
+                    result.add(friend);
+                }
+            }
         }
+
+        return result;
     }
 }

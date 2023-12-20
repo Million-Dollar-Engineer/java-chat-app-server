@@ -1,5 +1,6 @@
 package chatapp.service;
 
+import chatapp.dto.User;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.utils.Utils;
@@ -9,6 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.security.SecureRandom;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 
@@ -153,7 +155,7 @@ public class UserService {
         }
     }
 
-    public String getFriendList(String user_id) throws Exception {
+    public List<User> getFriendList(String user_id) throws Exception {
         try {
             return repo.getFriendList(user_id);
         } catch (Exception e) {
