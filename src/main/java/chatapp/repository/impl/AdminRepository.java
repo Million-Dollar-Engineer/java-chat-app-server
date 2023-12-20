@@ -7,6 +7,7 @@ import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IAdminRepository;
 import org.apache.catalina.User;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.sql.*;
 
@@ -217,7 +218,6 @@ public class AdminRepository implements IAdminRepository {
         try {
             Statement statement = conn.createStatement();
             ResultSet resultSet = statement.executeQuery(query);
-            System.out.println("BBB");
             res = AdminEntity.FriendAndFOFResultSetToJSON(resultSet, greaterThan, lowerThan, equal);
         } catch (Exception e) {
             System.out.println(e);
@@ -242,6 +242,59 @@ public class AdminRepository implements IAdminRepository {
             System.out.println(e);
             throw e;
         }
+        return res;
+    }
+
+    public String getActiveUsersAndRelevantInfo(String sortBy, String order, String startTime,
+         String endTime, String username, String equal, String greaterThan, String lowerThan
+    ) throws SQLException {
+        String res = "";
+        String query = "SELECT u.id, u.username ,(SELECT COUNT(*) FROM access_histories ah\n" +
+                "\t\t\tWHERE ah.access_at >= ? AND ah.access_at <= ? AND ah.user_id = u.id\n" +
+                "\t\t\tGROUP BY ah.user_id) access_times, (SELECT COUNT(*) FROM personal_messages pm\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t   WHERE pm.sender_id = u.id \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t   AND pm.created_at >= ? AND pm.created_at <= ?) personal_num,\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t   \t\t(SELECT COUNT(*) FROM group_messages gm\n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t   WHERE gm.sender_id = u.id \n" +
+                "\t\t\t\t\t\t\t\t\t\t\t\t\t   AND gm.created_at >= ? AND gm.created_at <= ?) group_num\n" +
+                "FROM users u\n" +
+                "WHERE true";
+        if(username != null){
+            query += (" AND u.username ILIKE '%" + username + "%' ");
+        }
+        if(startTime != null && endTime != null){
+            query += String.format(" AND u.created_at >= '%s' AND u.created_at <= '%s' ", startTime, endTime);
+        }
+        if(sortBy != null){
+
+            if(sortBy.equals("time")){
+                sortBy = "u.created_at";
+                query += (" ORDER BY " + sortBy);
+            }
+            else if(sortBy.equals("username")){
+                sortBy = "u.username";
+                query += (" ORDER BY " + sortBy);
+            }
+
+        }
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)){
+            startTime += " 00:00:00";
+            Timestamp timestampStart= Timestamp.valueOf(startTime);
+            endTime += " 00:00:00";
+            Timestamp timestampEnd= Timestamp.valueOf(endTime);
+            preparedStatement.setTimestamp(1, timestampStart);
+            preparedStatement.setTimestamp(2, timestampEnd);
+            preparedStatement.setTimestamp(3, timestampStart);
+            preparedStatement.setTimestamp(4, timestampEnd);
+            preparedStatement.setTimestamp(5, timestampStart);
+            preparedStatement.setTimestamp(6, timestampEnd);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            res = AdminEntity.ActiveUsersAndRelevantInfoResultSetToJSON(resultSet, greaterThan, lowerThan, equal);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+
         return res;
     }
 

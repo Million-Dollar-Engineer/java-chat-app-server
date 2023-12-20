@@ -262,4 +262,28 @@ public class AdminController {
             return responseError(e);
         }
     }
+
+    @GetMapping("/active-user-and-relevant-info")
+    public ResponseEntity<String> getActiveUsersAndInfo(
+            @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "startTime", required = true) String startTime,
+            @RequestParam(name = "endTime", required = true) String endTime,
+            @RequestParam(name = "username", required = false) String username,
+            @RequestParam(name = "equal", required = false) String equal,
+            @RequestParam(name = "greaterThan", required = false) String greaterThan,
+            @RequestParam(name = "lowerThan", required = false) String lowerThan
+
+    ) {
+        try {
+            String data = service.getActiveUsersOperation(sortBy,order,startTime, endTime,
+                    username, greaterThan, lowerThan, equal);
+            String jsonMessage = String.format("{\"data\":  %s }", data);
+            return ResponseEntity.ok()
+                    .header("Content-Type", "application/json")
+                    .body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

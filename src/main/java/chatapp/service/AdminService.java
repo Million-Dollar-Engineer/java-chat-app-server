@@ -97,4 +97,16 @@ public class AdminService {
         }
     }
 
+    public String getActiveUsersOperation(String sortBy, String order, String startTime, String endTime,
+                                          String username, String greaterThan,
+                                          String lowerThan, String equal) throws Exception{
+        try {
+            return repo.getActiveUsersAndRelevantInfo(sortBy, order, startTime, endTime
+                    , username , equal, greaterThan, lowerThan);
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+    }
+
 }

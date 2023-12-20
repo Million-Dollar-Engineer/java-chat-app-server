@@ -20,4 +20,7 @@ public interface IAdminRepository {
 
     public String getNumberOfUserActiveEachMonth(int year)
             throws SQLException;
+    public String getActiveUsersAndRelevantInfo(String sortBy, String order, String startTime,
+                                                String endTime, String username, String equal, String greaterThan, String lowerThan
+    ) throws SQLException;
 }

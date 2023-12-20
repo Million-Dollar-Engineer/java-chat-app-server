@@ -97,5 +97,61 @@ public class AdminEntity {
         return res;
     }
 
+    static public String ActiveUsersAndRelevantInfoResultSetToJSON(ResultSet resultSet, String greaterThan,
+                                                                   String lowerThan, String equal
+    ) throws SQLException {
+        String res = "[ ";
+        int count = 0;
+        try{
+            while (resultSet.next()) {
+                int access_times = 0;
+                int personal_mes_num = 0;
+                int group_mes_num = 0;
+                access_times = resultSet.getInt("access_times");
+                personal_mes_num = resultSet.getInt("personal_num");
+                group_mes_num = resultSet.getInt("group_num");
+
+                System.out.println( "AA" +greaterThan);
+
+                if(greaterThan != null){
+                    if(Integer.parseInt(greaterThan) != 0){
+                        if(access_times <= Integer.parseInt(greaterThan)) continue;
+                    }
+                }
+                if(lowerThan != null){
+                    if(Integer.parseInt(lowerThan) != 0){
+                        if(access_times >= Integer.parseInt(lowerThan)) continue;
+                    }
+                }
+                if(equal != null){
+                    if(Integer.parseInt(equal) != 0){
+                        if(access_times != Integer.parseInt(equal)) continue;
+                    }
+                }
+
+                if(count >= 1) res += ",";
+
+
+                res += "{" +
+                        "\"id\": \"" + resultSet.getString("id") + '\"' +
+                        ", \"username\": \"" + resultSet.getString("username") + '\"' +
+                        ", \"access_times\": \"" + access_times + '\"' +
+                        ", \"chatted_people\": \"" + personal_mes_num + '\"' +
+                        ", \"chatted_group\": \"" + group_mes_num + '\"' +
+
+                        '}';
+                count++;
+            }
+        }
+        catch (Exception e){
+            System.out.println(e);
+            throw e;
+        }
+        res += " ]";
+        return res;
+    }
+
+
+
 
 }
