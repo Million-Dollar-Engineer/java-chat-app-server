@@ -24,4 +24,4 @@ COPY --from=builder /app/target/ChatApp-0.0.1-SNAPSHOT.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # Expose the port that the application listens on
-EXPOSE 8888
+EXPOSE 8881
