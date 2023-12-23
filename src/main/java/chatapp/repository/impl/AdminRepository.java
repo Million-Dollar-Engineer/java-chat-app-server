@@ -78,24 +78,54 @@ public class AdminRepository implements IAdminRepository {
 
     @Override
     public void updateUser(UserEntity user) throws SQLException {
-        String query = "UPDATE users SET username=?, full_name=?, addr=?, dob=?, sex=CAST(? AS GENDER), email=?," +
-                "role= CAST(? AS USERROLE), status=CAST(? AS USERSTATUS) WHERE id=?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
-            preparedStatement.setString(1, user.getUsername());
-            preparedStatement.setString(2, user.getFullname());
-            preparedStatement.setString(3, user.getAddress());
+        String query = "UPDATE users ";
 
-            user.setDateOfBirth(user.getDateOfBirth() + " 00:00:00");
-            Timestamp timestamp= Timestamp.valueOf(user.getDateOfBirth());
+        int count = 0;
+        if(user.getFullname() != null || user.getAddress() != null || user.getDateOfBirth() != null ||
+                user.getSex() != null || user.getEmail() != null || user.getRole() != null
+                || user.getId() != null
+        ){
+            query += " SET ";
+            if(user.getFullname() != null ){
+                query += " full_name= '" +  user.getFullname() + "' ";
+                count++;
+            }
+            if(user.getAddress() != null ){
+                if(count >= 1) query += ",";
+                query += " addr= '" +  user.getAddress() + "' ";
+                count++;
+            }
+            if(user.getDateOfBirth() != null ){
+                if(count >= 1) query += ",";
+                query += " dob= '" +  user.getDateOfBirth() + "' ";
+                count++;
+            }
+            if(user.getSex() != null ){
+                if(count >= 1) query += ",";
+                query += " sex= '" +  user.getSex() + "' ";
+                count++;
+            }
+            if(user.getEmail() != null ){
+                if(count >= 1) query += ",";
+                query += " email= '" +  user.getEmail() + "' ";
+                count++;
+            }
+            if(user.getRole() != null ){
+                if(count >= 1) query += ",";
+                query += " role= '" +  user.getRole() + "' ";
+                count++;
+            }
+            if(user.getStatus() != null ){
+                if(count >= 1) query += ",";
+                query += " status= '" +  user.getStatus() + "' ";
+                count++;
+            }
+            query +=" WHERE id= '" + user.getId() + "' ";
+        }
 
-            preparedStatement.setTimestamp(4, timestamp);
-            preparedStatement.setString(5, user.getSex());
-            preparedStatement.setString(6, user.getEmail());
-            preparedStatement.setString(7, user.getRole());
-            preparedStatement.setString(8, user.getStatus());
-            preparedStatement.setString(9, user.getId());
-
-            preparedStatement.executeUpdate();
+        try {
+            Statement statement = conn.createStatement();
+            statement.executeUpdate(query);
             System.out.println("Update a row");
         } catch (Exception e) {
             System.out.println(e);

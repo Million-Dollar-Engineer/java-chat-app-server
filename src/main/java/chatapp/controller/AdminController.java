@@ -87,7 +87,7 @@ public class AdminController {
     public ResponseEntity<String> changeUserData(@RequestBody UserEntity user) {
         try {
             service.updateUserData(user);
-            String jsonMessage = String.format("{\"message\": %s }", "Update successfully");
+            String jsonMessage = "{\"message\": \"Updated successfully\"}";
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
@@ -100,7 +100,7 @@ public class AdminController {
     public ResponseEntity<String> deleteUserData(@PathVariable String id) {
         try {
             service.deleteUserData(id);
-            String jsonMessage = String.format("{\"message\": %s }", "Delete successfully");
+            String jsonMessage = "{\"message\": \"Delete successfully\"}";
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")
                     .body(jsonMessage);
