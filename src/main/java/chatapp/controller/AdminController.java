@@ -40,7 +40,10 @@ public class AdminController {
     }
 
     ResponseEntity<String> responseError(Exception e){
-        String jsonMessage = String.format("{\"error\": \"%s\"}", e.getMessage());
+        String errorMessage = e.getMessage();
+        errorMessage = errorMessage.replaceAll("\"", "\'");
+
+        String jsonMessage = String.format("{\"error\": \"%s\"}", errorMessage);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .header("Content-Type", "application/json")
                 .body(jsonMessage);
