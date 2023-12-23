@@ -58,7 +58,10 @@ public class AdminRepository implements IAdminRepository {
             query += " status ILIKE" + "'%" + status + "%' ";
         }
         if(sortBy != null){
-            query += " ORDER BY " + sortBy + " " + order + " ";
+            if(order != null){
+                query += " ORDER BY " + sortBy + " " + order + " ";
+
+            }
         }
 
         System.out.println(query);
@@ -165,7 +168,7 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public String getSpamReportList(String sortBy, String startTime, String endTime, String username)
+    public String getSpamReportList(String sortBy, String order, String startTime, String endTime, String username)
             throws SQLException{
         String res = "";
 
@@ -180,11 +183,17 @@ public class AdminRepository implements IAdminRepository {
 
             if(sortBy.equals("time")){
                 sortBy = "s.created_at";
-                query += (" ORDER BY " + sortBy);
+                query += (" ORDER BY " + sortBy + " ");
+                if(order != null){
+                    query += order;
+                }
             }
             else if(sortBy.equals("username")){
                 sortBy = "u.username";
-                query += (" ORDER BY " + sortBy);
+                query += (" ORDER BY " + sortBy + " ");
+                if(order != null){
+                    query += order;
+                }
             }
 
         }
