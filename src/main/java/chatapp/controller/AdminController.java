@@ -171,10 +171,11 @@ public class AdminController {
     @GetMapping("/group-chat")
     public ResponseEntity<String> getGroupChatList(
             @RequestParam(name = "sortBy", required = false) String sortBy,
+            @RequestParam(name = "order", required = false) String order,
             @RequestParam(name = "name", required = false) String name
     ) {
         try {
-            String groupData = groupChatService.getGroupChatList(sortBy, name);
+            String groupData = groupChatService.getGroupChatList(sortBy, order, name);
             String jsonMessage = String.format("{\"groupList\":  %s }", groupData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

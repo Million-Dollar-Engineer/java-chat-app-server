@@ -10,9 +10,9 @@ public class GroupChatService {
         this.repo = groupChatRepository;
     }
 
-    public String getGroupChatList(String sortBy, String name) throws Exception {
+    public String getGroupChatList(String sortBy, String order, String name) throws Exception {
         try {
-            return repo.getGroupChatListByAdmin(sortBy, name);
+            return repo.getGroupChatListByAdmin(sortBy, order, name);
         }
         catch (Exception e){
             System.out.println(e);
