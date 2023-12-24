@@ -12,7 +12,7 @@ public interface IAdminRepository {
             throws SQLException;
     public void updateUser(UserEntity user) throws SQLException;
     public void deleteUser(String id) throws SQLException;
-    public String getLoginHistories(String order) throws SQLException;
+    public String getLoginHistories(String order, String username) throws SQLException;
     public String getSpamReportList(String sortBy, String order, String startTime, String endTime, String username)
             throws SQLException;
     public String getNumberOfUserEachMonth(int year)

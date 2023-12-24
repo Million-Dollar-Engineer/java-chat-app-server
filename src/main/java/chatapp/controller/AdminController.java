@@ -143,10 +143,11 @@ public class AdminController {
 
     @GetMapping("/login-histories")
     public ResponseEntity<String> getLoginHistories(
-            @RequestParam(name = "orderBy", required = false) String order
+            @RequestParam(name = "orderBy", required = false) String order,
+            @RequestParam(name = "username", required = false) String username
     ) {
         try {
-            String loginData = service.getLoginHistories(order);
+            String loginData = service.getLoginHistories(order, username);
             String jsonMessage = String.format("{\"loginData\":  %s }", loginData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

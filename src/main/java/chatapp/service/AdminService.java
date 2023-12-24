@@ -51,10 +51,10 @@ public class AdminService {
         }
     }
 
-    public String getLoginHistories(String order) throws Exception{
+    public String getLoginHistories(String order, String username) throws Exception{
         try {
             if(order == null) order = "";
-            return repo.getLoginHistories(order);
+            return repo.getLoginHistories(order, username);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

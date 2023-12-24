@@ -161,13 +161,14 @@ public class AdminRepository implements IAdminRepository {
     }
 
     @Override
-    public String getLoginHistories(String order) throws SQLException{
+    public String getLoginHistories(String order, String username) throws SQLException{
         String res = "";
         System.out.println(order);
         String query = "SELECT username, full_name, ip_addr, login_time" +
                 " FROM login_histories lg, users u" +
-                " WHERE lg.user_id = u.id" +
-                " ORDER BY login_time " + order;
+                " WHERE lg.user_id = u.id ";
+        if(username != null) query += " and u.username ='" + username + "' ";
+        query += " ORDER BY login_time " + order;
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             ResultSet resultSet = preparedStatement.executeQuery();
             res = UserEntity.loginHistoriesResultSetToJSON(resultSet);
