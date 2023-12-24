@@ -55,11 +55,13 @@ public class AdminController {
             @RequestParam(name = "username", required = false) String username,
             @RequestParam(name = "status", required = false) String status,
             @RequestParam(name = "sortBy", required = false) String sortBy,
-            @RequestParam(name = "order", required = false) String order
+            @RequestParam(name = "order", required = false) String order,
+            @RequestParam(name = "startTime", required = false) String startTime,
+            @RequestParam(name = "endTime", required = false) String endTime
     ) {
         try {
             System.out.println(fullname + username + status);
-            String userData = service.readUserData(fullname, username, status, sortBy, order);
+            String userData = service.readUserData(fullname, username, status, sortBy, order, startTime, endTime);
             String jsonMessage = String.format("{\"userData\": %s }", userData);
             return ResponseEntity.ok()
                     .header("Content-Type", "application/json")

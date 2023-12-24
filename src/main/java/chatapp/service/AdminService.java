@@ -21,11 +21,12 @@ public class AdminService {
     }
 
 
-    public String readUserData(String fullname, String username, String status, String sortBy, String order)
+    public String readUserData(String fullname, String username, String status, String sortBy,
+                               String order, String startTime, String endTime)
             throws Exception {
         try {
 
-            return repo.getUserData(fullname, username, status, sortBy, order);
+            return repo.getUserData(fullname, username, status, sortBy, order, startTime, endTime);
         } catch (Exception e) {
             System.out.println(e);
             throw e;

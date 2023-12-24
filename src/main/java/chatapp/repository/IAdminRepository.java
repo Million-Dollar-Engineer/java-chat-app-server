@@ -6,7 +6,9 @@ import java.sql.SQLException;
 
 public interface IAdminRepository {
     public void setAccountStatus(String id, String status) throws Exception;
-    public String getUserData(String fullname, String username, String status, String sortBy, String order)
+    public String getUserData(String fullname, String username, String status, String sortBy, String order,
+                              String startTime,
+                              String endTime)
             throws SQLException;
     public void updateUser(UserEntity user) throws SQLException;
     public void deleteUser(String id) throws SQLException;

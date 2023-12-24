@@ -36,7 +36,8 @@ public class AdminRepository implements IAdminRepository {
 
 
     @Override
-    public String getUserData(String fullname, String username, String status, String sortBy, String order)
+    public String getUserData(String fullname, String username, String status, String sortBy, String order,
+                              String startTime, String endTime)
             throws SQLException {
         String query = "SELECT * FROM users";
         int count = 0;
@@ -56,6 +57,16 @@ public class AdminRepository implements IAdminRepository {
             if (count > 0) query += " and ";
             count += 1;
             query += " status ILIKE" + "'%" + status + "%' ";
+        }
+        if (startTime != null) {
+            if (count > 0) query += " and ";
+            count += 1;
+            query += " created_at >= '" +  startTime  + "' ";
+        }
+        if (endTime != null) {
+            if (count > 0) query += " and ";
+            count += 1;
+            query += " created_at <= '" +  endTime  + "' ";
         }
         if(sortBy != null){
             if(order != null){
