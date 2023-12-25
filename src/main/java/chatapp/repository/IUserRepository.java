@@ -31,4 +31,7 @@ public interface IUserRepository {
     public boolean isUserInGroup(String user_id, String group_id) throws SQLException;
 
     public String getUserIdByUsername(String username) throws SQLException;
+
+    public String getUsernameByUserId(String username) throws SQLException;
+
 }

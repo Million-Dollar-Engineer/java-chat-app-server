@@ -296,4 +296,17 @@ public class UserRepository implements IUserRepository {
     }
 
 
+    public String getUsernameByUserId(String user_id) throws SQLException {
+        String query = "SELECT * FROM users WHERE id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return "";
+            } else {
+                return resultSet.getString("username");
+            }
+        }
+    }
 }

@@ -39,6 +39,10 @@ public class UserController {
         return service.getUserIdByUsername(username);
     }
 
+    public static String getUsernameById(String id) throws Exception {
+        return service.getUserNameById(id);
+    }
+
     ResponseEntity<String> responseError(Exception e) {
         String errorMessage = e.getMessage();
         errorMessage = errorMessage.replaceAll("\"", "\'");

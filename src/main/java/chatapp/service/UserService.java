@@ -188,4 +188,12 @@ public class UserService {
             return "";
         }
     }
+
+    public String getUserNameById(String user_id) throws Exception {
+        try {
+            return repo.getUsernameByUserId(user_id);
+        } catch (Exception e) {
+            return "";
+        }
+    }
 }
