@@ -50,6 +50,8 @@ public class SocketThread extends Thread {
 
                         for (ConnectionEntity connection : SocketComponent.connections) {
                             if (connection.getUserId().equals(recipient)) {
+                                connection.sendMessage(header);
+                                connection.sendMessage(client.getUserId());
                                 connection.sendMessage(message);
                                 break;
                             }
@@ -67,6 +69,8 @@ public class SocketThread extends Thread {
 
                         for (ConnectionEntity connection : SocketComponent.connections) {
                             if (UserController.isUserInGroup(connection.getUserId(), group)) {
+                                connection.sendMessage(header);
+                                connection.sendMessage(group);
                                 connection.sendMessage(message);
                             }
                         }
