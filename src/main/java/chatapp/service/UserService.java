@@ -221,4 +221,13 @@ public class UserService {
             System.out.println(e);
         }
     }
+
+    public Boolean isBlocked(String userId, String userIdByUsername) {
+        try {
+            return repo.isBlocked(userId, userIdByUsername);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
 }

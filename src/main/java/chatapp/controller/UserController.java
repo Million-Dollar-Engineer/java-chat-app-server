@@ -214,4 +214,13 @@ public class UserController {
             return responseError(e);
         }
     }
+
+    @GetMapping("is-blocked")
+    public Boolean isBlocked(@RequestParam String user_id, @RequestParam String block_user_name) {
+        try {
+            return service.isBlocked(user_id, UserController.getUserIdByUsername(block_user_name));
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

@@ -40,4 +40,5 @@ public interface IUserRepository {
 
     public void blockUser(String user_id, String block_id) throws SQLException;
 
+    Boolean isBlocked(String userId, String userIdByUsername);
 }

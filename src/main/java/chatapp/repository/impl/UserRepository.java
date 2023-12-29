@@ -354,4 +354,21 @@ public class UserRepository implements IUserRepository {
             throw e;
         }
     }
+
+    public Boolean isBlocked(String userId, String userIdByUsername) {
+        String query = "SELECT * FROM blocks WHERE user_id = ? AND blocked_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, userId);
+            preparedStatement.setString(2, userIdByUsername);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
 }
