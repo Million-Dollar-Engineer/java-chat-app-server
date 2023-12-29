@@ -296,4 +296,95 @@ public class UserRepository implements IUserRepository {
     }
 
 
+    public String getUsernameByUserId(String user_id) throws SQLException {
+        String query = "SELECT * FROM users WHERE id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, user_id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return "";
+            } else {
+                return resultSet.getString("username");
+            }
+        }
+    }
+
+    public User getUserByUsername(String username) throws SQLException {
+        String query = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            } else {
+                return User.mapRowToEntity(resultSet);
+            }
+        }
+    }
+
+    public List<User> getFriendRequestList(String id) throws SQLException {
+        String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
+                "WHERE u.id != ? AND uf.is_accepted= false AND (uf.user_id = ? OR uf.friend_id = ?) " +
+                "AND (uf.user_id = u.id OR uf.friend_id = u.id)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, id);
+            preparedStatement.setString(3, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return User.mapRSToListEntity(resultSet);
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public void blockUser(String user_id, String block_id) throws SQLException {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        String query = "INSERT INTO blocks (id, user_id, blocked_id) VALUES (?, ?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, uuidAsString);
+            preparedStatement.setString(2, user_id);
+            preparedStatement.setString(3, block_id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
+
+    public Boolean isBlocked(String userId, String userIdByUsername) {
+        String query = "SELECT * FROM blocks WHERE user_id = ? AND blocked_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, userId);
+            preparedStatement.setString(2, userIdByUsername);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return false;
+            } else {
+                return true;
+            }
+        } catch (SQLException e) {
+            return false;
+        }
+    }
+
+    public void reportSpam(String userId, String userIdByUsername, String reason) {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        String query = "INSERT INTO spam_reports (id, reporter_id, accused_id, reason) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, uuidAsString);
+            preparedStatement.setString(2, userId);
+            preparedStatement.setString(3, userIdByUsername);
+            preparedStatement.setString(4, reason);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

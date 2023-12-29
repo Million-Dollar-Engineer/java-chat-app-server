@@ -39,6 +39,10 @@ public class UserController {
         return service.getUserIdByUsername(username);
     }
 
+    public static String getUsernameById(String id) throws Exception {
+        return service.getUserNameById(id);
+    }
+
     ResponseEntity<String> responseError(Exception e) {
         String errorMessage = e.getMessage();
         errorMessage = errorMessage.replaceAll("\"", "\'");
@@ -106,12 +110,12 @@ public class UserController {
         }
     }
 
-    @PostMapping("/add-friend")
+    @GetMapping("/add-friend")
     public ResponseEntity<String> sendFriendRequest(
-            @RequestBody FriendRequestEntity friendRequest
+            @RequestParam String user_id, @RequestParam String friend_user_name
     ) {
         try {
-            service.saveFriendRequest(friendRequest.user_id, friendRequest.friend_id);
+            service.saveFriendRequest(user_id, UserController.getUserIdByUsername(friend_user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Friend request was sent\"}");
 
@@ -129,7 +133,7 @@ public class UserController {
             @RequestBody FriendRequestEntity friendRequest
     ) {
         try {
-            service.acceptFriendRequest(friendRequest.user_id, friendRequest.friend_id);
+            service.acceptFriendRequest(friendRequest.user_id, UserController.getUserIdByUsername(friendRequest.friend_user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Friend request was accepted\"}");
 
@@ -147,7 +151,7 @@ public class UserController {
             @RequestBody FriendRequestEntity friendRequest
     ) {
         try {
-            service.unFriend(friendRequest.user_id, friendRequest.friend_id);
+            service.unFriend(friendRequest.user_id, UserController.getUserIdByUsername(friendRequest.friend_user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Friend or friend request was deleted\"}");
 
@@ -179,5 +183,60 @@ public class UserController {
         }
 
         return result;
+    }
+
+    @GetMapping("/list")
+    public User getUserByUserName(@RequestParam String username) throws Exception {
+        User user = service.getUserByUsername(username);
+        if (user == null) {
+            throw new Exception("User not found");
+        }
+        return service.getUserByUsername(username);
+    }
+
+    @GetMapping("/friend-request-list")
+    public List<User> getFriendRequestList(@RequestParam String id) throws Exception {
+        return service.getFriendRequestList(id);
+    }
+
+    @GetMapping("block-user")
+    public ResponseEntity<String> blockUser(@RequestParam String user_id, @RequestParam String block_user_name) {
+        try {
+            service.blockUser(user_id, UserController.getUserIdByUsername(block_user_name));
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was blocked\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("is-blocked")
+    public Boolean isBlocked(@RequestParam String user_id, @RequestParam String block_user_name) {
+        try {
+            return service.isBlocked(user_id, UserController.getUserIdByUsername(block_user_name));
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @GetMapping("report-spam")
+    public ResponseEntity<String> reportSpam(@RequestParam String user_id, @RequestParam String spam_user_name, @RequestParam String reason) {
+        try {
+            service.reportSpam(user_id, UserController.getUserIdByUsername(spam_user_name), reason);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was reported\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
     }
 }

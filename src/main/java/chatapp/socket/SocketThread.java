@@ -34,8 +34,14 @@ public class SocketThread extends Thread {
                 String header = client.readMessage();
 
                 if (header == null) {
+                    for (int i = 0; i < SocketComponent.connections.size(); i++) {
+                        if (SocketComponent.connections.get(i).getUserId().equals(client.getUserId())) {
+                            SocketComponent.connections.remove(i);
+                            break;
+                        }
+                    }
                     client.close();
-                    SocketComponent.connections.remove(client);
+                    break;
                 }
 
                 switch (Objects.requireNonNull(header)) {
@@ -43,6 +49,8 @@ public class SocketThread extends Thread {
                         String recipient = UserController.getUserIdByUsername(client.readMessage());
                         String message = client.readMessage();
 
+                        System.out.println("recipient: " + recipient);
+                        System.out.println("message: " + message);
                         MessageEntity messageEntity = new PersonalMessageEntity("",
                                 client.getUserId(), recipient, message, null);
 
@@ -50,7 +58,11 @@ public class SocketThread extends Thread {
 
                         for (ConnectionEntity connection : SocketComponent.connections) {
                             if (connection.getUserId().equals(recipient)) {
+                                connection.sendMessage(header);
+                                connection.sendMessage(UserController.getUsernameById(client.getUserId()));
                                 connection.sendMessage(message);
+
+                                System.out.println("sent message to user" + connection.getUserId());
                                 break;
                             }
                         }
@@ -67,6 +79,9 @@ public class SocketThread extends Thread {
 
                         for (ConnectionEntity connection : SocketComponent.connections) {
                             if (UserController.isUserInGroup(connection.getUserId(), group)) {
+                                connection.sendMessage(header);
+                                connection.sendMessage(group);
+                                connection.sendMessage(UserController.getUsernameById(client.getUserId()));
                                 connection.sendMessage(message);
                             }
                         }
@@ -74,8 +89,15 @@ public class SocketThread extends Thread {
                     }
                 }
             } catch (Exception e) {
+                for (int i = 0; i < SocketComponent.connections.size(); i++) {
+                    if (SocketComponent.connections.get(i).getUserId().equals(client.getUserId())) {
+                        SocketComponent.connections.remove(i);
+                        break;
+                    }
+                }
                 client.close();
                 logger.log(Level.SEVERE, "Error reading message from client.", e);
+                break;
             }
         } while (!client.isClosed());
     }

@@ -26,9 +26,21 @@ public interface IUserRepository {
 
     public List<User> getFriendList(String user_id) throws SQLException;
 
+    public List<User> getFriendRequestList(String user_id) throws SQLException;
+
+    public User getUserByUsername(String username) throws SQLException;
+
     public String getOnlineFriend(String user_id) throws Exception;
 
     public boolean isUserInGroup(String user_id, String group_id) throws SQLException;
 
     public String getUserIdByUsername(String username) throws SQLException;
+
+    public String getUsernameByUserId(String username) throws SQLException;
+
+    public void blockUser(String user_id, String block_id) throws SQLException;
+
+    Boolean isBlocked(String userId, String userIdByUsername);
+
+    void reportSpam(String userId, String userIdByUsername, String reason);
 }

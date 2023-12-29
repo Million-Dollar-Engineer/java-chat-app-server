@@ -10,6 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -186,6 +187,55 @@ public class UserService {
             return repo.getUserIdByUsername(username);
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    public String getUserNameById(String user_id) throws Exception {
+        try {
+            return repo.getUsernameByUserId(user_id);
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    public User getUserByUsername(String username) throws Exception {
+        try {
+            return repo.getUserByUsername(username);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<User> getFriendRequestList(String id) {
+        try {
+            return repo.getFriendRequestList(id);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+    }
+
+    public void blockUser(String userId, String blockUserId) {
+        try {
+            repo.blockUser(userId, blockUserId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public Boolean isBlocked(String userId, String userIdByUsername) {
+        try {
+            return repo.isBlocked(userId, userIdByUsername);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
+    }
+
+    public void reportSpam(String userId, String userIdByUsername, String reason) {
+        try {
+            repo.reportSpam(userId, userIdByUsername, reason);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 }
