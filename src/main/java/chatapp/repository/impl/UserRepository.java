@@ -432,7 +432,7 @@ public class UserRepository implements IUserRepository {
     }
 
     public List<GroupChatEntity> listMyGroup(String userId) {
-        String query = "SELECT cg.id, cg.name FROM chat_groups cg, chat_group_members cgm " +
+        String query = "SELECT cg.id, cg.name, cg.created_at, cg.deleted, cg.updated_at FROM chat_groups cg, chat_group_members cgm " +
                 "WHERE cgm.member_id = ? AND cgm.group_id = cg.id";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, userId);

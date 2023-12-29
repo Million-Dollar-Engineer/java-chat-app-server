@@ -2,6 +2,7 @@ package chatapp.entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class GroupChatEntity {
@@ -20,7 +21,7 @@ public class GroupChatEntity {
     }
 
     public static List<GroupChatEntity> mapRSToListEntity(ResultSet resultSet) {
-        List<GroupChatEntity> list = null;
+        List<GroupChatEntity> list = new ArrayList<>();
         try {
             while (resultSet.next()) {
                 GroupChatEntity group = new GroupChatEntity(
