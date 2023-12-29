@@ -339,4 +339,19 @@ public class UserRepository implements IUserRepository {
             throw e;
         }
     }
+
+    public void blockUser(String user_id, String block_id) throws SQLException {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        String query = "INSERT INTO blocks (id, user_id, blocked_id) VALUES (?, ?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, uuidAsString);
+            preparedStatement.setString(2, user_id);
+            preparedStatement.setString(3, block_id);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
 }

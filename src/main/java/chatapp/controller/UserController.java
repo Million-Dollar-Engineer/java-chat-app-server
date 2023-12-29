@@ -198,4 +198,20 @@ public class UserController {
     public List<User> getFriendRequestList(@RequestParam String id) throws Exception {
         return service.getFriendRequestList(id);
     }
+
+    @GetMapping("block-user")
+    public ResponseEntity<String> blockUser(@RequestParam String user_id, @RequestParam String block_user_name) {
+        try {
+            service.blockUser(user_id, UserController.getUserIdByUsername(block_user_name));
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was blocked\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

@@ -213,4 +213,12 @@ public class UserService {
             return new ArrayList<>();
         }
     }
+
+    public void blockUser(String userId, String blockUserId) {
+        try {
+            repo.blockUser(userId, blockUserId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }

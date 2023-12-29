@@ -38,4 +38,6 @@ public interface IUserRepository {
 
     public String getUsernameByUserId(String username) throws SQLException;
 
+    public void blockUser(String user_id, String block_id) throws SQLException;
+
 }
