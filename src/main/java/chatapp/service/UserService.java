@@ -1,5 +1,6 @@
 package chatapp.service;
 
+import chatapp.dto.GroupMember;
 import chatapp.dto.User;
 import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
@@ -259,6 +260,15 @@ public class UserService {
     public List<GroupChatEntity> listMyGroup(String userId) {
         try {
             return repo.listMyGroup(userId);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
+        }
+    }
+
+    public List<GroupMember> listGroupMember(String groupId) {
+        try {
+            return repo.listGroupMember(groupId);
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();

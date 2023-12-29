@@ -1,6 +1,7 @@
 package chatapp.repository;
 
 
+import chatapp.dto.GroupMember;
 import chatapp.dto.User;
 import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
@@ -50,4 +51,6 @@ public interface IUserRepository {
     void addUserToGroup(String groupId, String userIdByUsername);
 
     List<GroupChatEntity> listMyGroup(String userId);
+
+    List<GroupMember> listGroupMember(String groupId);
 }

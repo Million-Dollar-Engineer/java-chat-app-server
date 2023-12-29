@@ -1,6 +1,7 @@
 package chatapp.controller;
 
 
+import chatapp.dto.GroupMember;
 import chatapp.dto.User;
 import chatapp.entity.ConnectionEntity;
 import chatapp.entity.GroupChatEntity;
@@ -216,11 +217,29 @@ public class UserController {
     }
 
     @GetMapping("is-blocked")
-    public Boolean isBlocked(@RequestParam String user_id, @RequestParam String block_user_name) {
+    public ResponseEntity<String> isBlocked(@RequestParam String user_id, @RequestParam String block_user_name) {
         try {
-            return service.isBlocked(user_id, UserController.getUserIdByUsername(block_user_name));
+            if (service.isBlocked(user_id, UserController.getUserIdByUsername(block_user_name))) {
+                return ResponseEntity
+                        .ok()
+                        .header("Content-Type", "application/json").
+                        body("{\"message\": \"You blocked this user!\"}");
+            } else if (service.isBlocked(UserController.getUserIdByUsername(block_user_name), user_id)) {
+                return ResponseEntity
+                        .ok()
+                        .header("Content-Type", "application/json").
+                        body("{\"message\": \"This user blocked you!\"}");
+            } else {
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .header("Content-Type", "application/json").
+                        body("{\"message\": \"This user is not blocked!\"}");
+            }
         } catch (Exception e) {
-            return false;
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"User was not blocked\"}");
         }
     }
 
@@ -282,5 +301,10 @@ public class UserController {
     @GetMapping("list-my-group")
     public List<GroupChatEntity> listMyGroup(@RequestParam String user_id) throws Exception {
         return service.listMyGroup(user_id);
+    }
+
+    @GetMapping("list-group-member")
+    public List<GroupMember> listGroupMember(@RequestParam String group_id) throws Exception {
+        return service.listGroupMember(group_id);
     }
 }

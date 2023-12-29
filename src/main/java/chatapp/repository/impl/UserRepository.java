@@ -1,6 +1,7 @@
 package chatapp.repository.impl;
 
 
+import chatapp.dto.GroupMember;
 import chatapp.dto.User;
 import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
@@ -439,6 +440,20 @@ public class UserRepository implements IUserRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return GroupChatEntity.mapRSToListEntity(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public List<GroupMember> listGroupMember(String groupId) {
+        String query = "SELECT u.username, u.full_name, cgm.member_role FROM chat_group_members cgm, users u " +
+                "WHERE cgm.group_id = ? AND cgm.member_id = u.id";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, groupId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return GroupMember.mapRSToListEntity(resultSet);
         } catch (SQLException e) {
             System.out.println(e);
             return null;
