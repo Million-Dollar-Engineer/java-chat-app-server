@@ -3,7 +3,6 @@ package chatapp.controller;
 
 import chatapp.dto.User;
 import chatapp.entity.ConnectionEntity;
-import chatapp.entity.FriendRequestEntity;
 import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
@@ -129,12 +128,12 @@ public class UserController {
         }
     }
 
-    @PatchMapping("/accept-friend")
+    @GetMapping("/accept-friend")
     public ResponseEntity<String> acceptFriendRequest(
-            @RequestBody FriendRequestEntity friendRequest
+            @RequestParam String user_id, @RequestParam String friend_user_name
     ) {
         try {
-            service.acceptFriendRequest(friendRequest.user_id, UserController.getUserIdByUsername(friendRequest.friend_user_name));
+            service.acceptFriendRequest(user_id, UserController.getUserIdByUsername(friend_user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Friend request was accepted\"}");
 
@@ -147,12 +146,12 @@ public class UserController {
         }
     }
 
-    @PutMapping("/unfriend")
+    @GetMapping("/unfriend")
     public ResponseEntity<String> unFriend(
-            @RequestBody FriendRequestEntity friendRequest
+            @RequestParam String user_id, @RequestParam String friend_user_name
     ) {
         try {
-            service.unFriend(friendRequest.user_id, UserController.getUserIdByUsername(friendRequest.friend_user_name));
+            service.unFriend(user_id, UserController.getUserIdByUsername(friend_user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"Friend or friend request was deleted\"}");
 
