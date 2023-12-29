@@ -1,6 +1,7 @@
 package chatapp.service;
 
 import chatapp.dto.User;
+import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.utils.Utils;
@@ -236,6 +237,31 @@ public class UserService {
             repo.reportSpam(userId, userIdByUsername, reason);
         } catch (Exception e) {
             System.out.println(e);
+        }
+    }
+
+    public void createGroup(String userId, String groupName) {
+        try {
+            repo.createGroup(userId, groupName);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void addUserToGroup(String groupId, String userIdByUsername) {
+        try {
+            repo.addUserToGroup(userIdByUsername, groupId);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public List<GroupChatEntity> listMyGroup(String userId) {
+        try {
+            return repo.listMyGroup(userId);
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ArrayList<>();
         }
     }
 }

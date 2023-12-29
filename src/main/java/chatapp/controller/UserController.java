@@ -4,6 +4,7 @@ package chatapp.controller;
 import chatapp.dto.User;
 import chatapp.entity.ConnectionEntity;
 import chatapp.entity.FriendRequestEntity;
+import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IUserRepository;
 import chatapp.repository.impl.UserRepository;
@@ -238,5 +239,49 @@ public class UserController {
         } catch (Exception e) {
             return responseError(e);
         }
+    }
+
+    @GetMapping("create-group")
+    public ResponseEntity<String> createGroup(@RequestParam String user_id, @RequestParam String group_name) {
+        try {
+            service.createGroup(user_id, group_name);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"Group was created\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("add-user-to-group")
+    public ResponseEntity<String> addUserToGroup(@RequestParam String user_id, @RequestParam String group_id, @RequestParam String user_name) throws Exception {
+        if (!isUserInGroup(user_id, group_id)) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"you dont have permission\"}");
+        }
+
+        try {
+            service.addUserToGroup(group_id, UserController.getUserIdByUsername(user_name));
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was added to group\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("list-my-group")
+    public List<GroupChatEntity> listMyGroup(@RequestParam String user_id) throws Exception {
+        return service.listMyGroup(user_id);
     }
 }

@@ -2,6 +2,7 @@ package chatapp.entity;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 public class GroupChatEntity {
     private String id;
@@ -9,6 +10,57 @@ public class GroupChatEntity {
     private String created_at;
     private String updated_at;
     private boolean deleted;
+
+    public GroupChatEntity(String id, String name, String created_at, String updated_at, boolean deleted) {
+        this.id = id;
+        this.name = name;
+        this.created_at = created_at;
+        this.updated_at = updated_at;
+        this.deleted = deleted;
+    }
+
+    public static List<GroupChatEntity> mapRSToListEntity(ResultSet resultSet) {
+        List<GroupChatEntity> list = null;
+        try {
+            while (resultSet.next()) {
+                GroupChatEntity group = new GroupChatEntity(
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("created_at"),
+                        resultSet.getString("updated_at"),
+                        resultSet.getBoolean("deleted")
+                );
+                list.add(group);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return list;
+    }
+
+    public static String resultSetToJSON(ResultSet resultSet) throws SQLException {
+        String res = "[ ";
+        int count = 0;
+        try {
+            while (resultSet.next()) {
+                if (count >= 1) res += ",";
+                GroupChatEntity group = new GroupChatEntity(
+                        resultSet.getString("id"),
+                        resultSet.getString("name"),
+                        resultSet.getString("created_at"),
+                        resultSet.getString("updated_at"),
+                        resultSet.getBoolean("deleted")
+                );
+                res += group.toString();
+                count++;
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw e;
+        }
+        res += " ]";
+        return res;
+    }
 
     public String getId() {
         return id;
@@ -50,14 +102,6 @@ public class GroupChatEntity {
         this.deleted = deleted;
     }
 
-    public GroupChatEntity(String id, String name, String created_at, String updated_at, boolean deleted) {
-        this.id = id;
-        this.name = name;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
-        this.deleted = deleted;
-    }
-
     @Override
     public String toString() {
         return "{" +
@@ -67,30 +111,5 @@ public class GroupChatEntity {
                 ", \"updated_at\": \"" + updated_at + '\"' +
                 ", \"deleted\": \"" + deleted + '\"' +
                 '}';
-    }
-
-    public static String resultSetToJSON(ResultSet resultSet) throws SQLException {
-        String res = "[ ";
-        int count = 0;
-        try{
-            while (resultSet.next()) {
-                if(count >= 1) res += ",";
-                GroupChatEntity group = new GroupChatEntity(
-                        resultSet.getString("id"),
-                        resultSet.getString("name"),
-                        resultSet.getString("created_at"),
-                        resultSet.getString("updated_at"),
-                        resultSet.getBoolean("deleted")
-                );
-                res += group.toString();
-                count++;
-            }
-        }
-        catch (Exception e){
-            System.out.println(e);
-            throw e;
-        }
-        res += " ]";
-        return res;
     }
 }

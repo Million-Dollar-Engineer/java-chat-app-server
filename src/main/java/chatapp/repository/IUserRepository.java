@@ -2,6 +2,7 @@ package chatapp.repository;
 
 
 import chatapp.dto.User;
+import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
 
 import java.sql.SQLException;
@@ -43,4 +44,10 @@ public interface IUserRepository {
     Boolean isBlocked(String userId, String userIdByUsername);
 
     void reportSpam(String userId, String userIdByUsername, String reason);
+
+    void createGroup(String userId, String groupName);
+
+    void addUserToGroup(String groupId, String userIdByUsername);
+
+    List<GroupChatEntity> listMyGroup(String userId);
 }

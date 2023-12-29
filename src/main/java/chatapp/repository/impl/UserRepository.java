@@ -2,6 +2,7 @@ package chatapp.repository.impl;
 
 
 import chatapp.dto.User;
+import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IUserRepository;
@@ -326,12 +327,11 @@ public class UserRepository implements IUserRepository {
 
     public List<User> getFriendRequestList(String id) throws SQLException {
         String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
-                "WHERE u.id != ? AND uf.is_accepted= false AND (uf.user_id = ? OR uf.friend_id = ?) " +
+                "WHERE u.id != ? AND uf.is_accepted= false AND uf.friend_id = ? " +
                 "AND (uf.user_id = u.id OR uf.friend_id = u.id)";
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
             preparedStatement.setString(1, id);
             preparedStatement.setString(2, id);
-            preparedStatement.setString(3, id);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return User.mapRSToListEntity(resultSet);
@@ -387,4 +387,62 @@ public class UserRepository implements IUserRepository {
             System.out.println(e);
         }
     }
+
+    public void createGroup(String userId, String groupName) {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        String query = "INSERT INTO chat_groups (id, name) VALUES (?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, uuidAsString);
+            preparedStatement.setString(2, groupName);
+
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+
+
+        String query1 = "INSERT INTO chat_group_members (group_id, member_id, member_role) VALUES (?, ?, ?)";
+
+        try (PreparedStatement preparedStatement1 = conn.prepareStatement(query1)) {
+            preparedStatement1.setString(1, uuidAsString);
+            preparedStatement1.setString(2, userId);
+            preparedStatement1.setString(3, "admin");
+
+            preparedStatement1.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void addUserToGroup(String userId, String groupId) {
+        System.out.println(groupId);
+        String query = "INSERT INTO chat_group_members (group_id, member_id, member_role) VALUES (?, ?, ?)";
+
+        try (PreparedStatement preparedStatement1 = conn.prepareStatement(query)) {
+            preparedStatement1.setString(1, groupId);
+            preparedStatement1.setString(2, userId);
+            preparedStatement1.setString(3, "member");
+
+            preparedStatement1.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public List<GroupChatEntity> listMyGroup(String userId) {
+        String query = "SELECT cg.id, cg.name FROM chat_groups cg, chat_group_members cgm " +
+                "WHERE cgm.member_id = ? AND cgm.group_id = cg.id";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, userId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return GroupChatEntity.mapRSToListEntity(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
 }
