@@ -371,4 +371,20 @@ public class UserRepository implements IUserRepository {
             return false;
         }
     }
+
+    public void reportSpam(String userId, String userIdByUsername, String reason) {
+        UUID uuid = UUID.randomUUID();
+        String uuidAsString = uuid.toString();
+        String query = "INSERT INTO spam_reports (id, reporter_id, accused_id, reason) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, uuidAsString);
+            preparedStatement.setString(2, userId);
+            preparedStatement.setString(3, userIdByUsername);
+            preparedStatement.setString(4, reason);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }

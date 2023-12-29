@@ -223,4 +223,20 @@ public class UserController {
             return false;
         }
     }
+
+    @GetMapping("report-spam")
+    public ResponseEntity<String> reportSpam(@RequestParam String user_id, @RequestParam String spam_user_name, @RequestParam String reason) {
+        try {
+            service.reportSpam(user_id, UserController.getUserIdByUsername(spam_user_name), reason);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was reported\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
 }

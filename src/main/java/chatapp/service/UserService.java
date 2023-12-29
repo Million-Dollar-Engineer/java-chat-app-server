@@ -230,4 +230,12 @@ public class UserService {
             return false;
         }
     }
+
+    public void reportSpam(String userId, String userIdByUsername, String reason) {
+        try {
+            repo.reportSpam(userId, userIdByUsername, reason);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }
