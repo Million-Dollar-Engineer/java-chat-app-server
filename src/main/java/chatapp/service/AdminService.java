@@ -2,6 +2,7 @@ package chatapp.service;
 
 import chatapp.entity.UserEntity;
 import chatapp.repository.IAdminRepository;
+import chatapp.repository.IUserRepository;
 
 
 public class AdminService {
@@ -10,6 +11,8 @@ public class AdminService {
     public AdminService(IAdminRepository adminRepository) {
         this.repo = adminRepository;
     }
+
+
 
     public void setAccountStatus(String id, String status) throws Exception {
         try {

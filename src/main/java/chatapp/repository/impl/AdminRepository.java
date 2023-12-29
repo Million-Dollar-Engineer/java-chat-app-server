@@ -6,6 +6,7 @@ import chatapp.entity.SpamReportEntity;
 import chatapp.entity.UserEntity;
 import chatapp.internal.database.Postgres;
 import chatapp.repository.IAdminRepository;
+import chatapp.utils.Utils;
 import org.apache.catalina.User;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -132,6 +133,11 @@ public class AdminRepository implements IAdminRepository {
             if(user.getStatus() != null ){
                 if(count >= 1) query += ",";
                 query += " status= '" +  user.getStatus() + "' ";
+                count++;
+            }
+            if(user.getPassword() != null && user.getPassword().length() >= 6 ){
+                if(count >= 1) query += ",";
+                query += " password= '" + Utils.hashString(user.getPassword()) + "' ";
                 count++;
             }
             query +=" WHERE id= '" + user.getId() + "' ";

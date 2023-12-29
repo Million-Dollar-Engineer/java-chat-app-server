@@ -1,6 +1,7 @@
 package chatapp.controller;
 
 
+import chatapp.dto.User;
 import chatapp.entity.UserEntity;
 import chatapp.repository.IAdminRepository;
 import chatapp.repository.IGroupChatRepository;
@@ -15,6 +16,10 @@ import chatapp.utils.Utils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 @RestController
@@ -158,14 +163,13 @@ public class AdminController {
     }
 
     @GetMapping("/friend-list/{user_id}")
-    public ResponseEntity<String> getFriendList(@PathVariable String user_id) {
+    public List<User> getFriendList(@PathVariable String user_id) {
         try {
+            List<User> friendList = userService.getFriendList(user_id);
             String jsonMessage = String.format("{\"friendList\":  %s }", "");
-            return ResponseEntity.ok()
-                    .header("Content-Type", "application/json")
-                    .body(jsonMessage);
+            return friendList;
         } catch (Exception e) {
-            return responseError(e);
+            return Collections.EMPTY_LIST;
         }
     }
 
