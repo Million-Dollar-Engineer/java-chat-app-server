@@ -10,6 +10,7 @@ import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Random;
@@ -194,6 +195,22 @@ public class UserService {
             return repo.getUsernameByUserId(user_id);
         } catch (Exception e) {
             return "";
+        }
+    }
+
+    public User getUserByUsername(String username) throws Exception {
+        try {
+            return repo.getUserByUsername(username);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public List<User> getFriendRequestList(String id) {
+        try {
+            return repo.getFriendRequestList(id);
+        } catch (Exception e) {
+            return new ArrayList<>();
         }
     }
 }

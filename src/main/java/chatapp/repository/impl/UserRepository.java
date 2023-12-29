@@ -309,4 +309,34 @@ public class UserRepository implements IUserRepository {
             }
         }
     }
+
+    public User getUserByUsername(String username) throws SQLException {
+        String query = "SELECT * FROM users WHERE username = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (!resultSet.next()) {
+                return null;
+            } else {
+                return User.mapRowToEntity(resultSet);
+            }
+        }
+    }
+
+    public List<User> getFriendRequestList(String id) throws SQLException {
+        String query = "SELECT u.username, u.full_name FROM user_friends uf, users u " +
+                "WHERE u.id != ? AND uf.is_accepted= false AND (uf.user_id = ? OR uf.friend_id = ?) " +
+                "AND (uf.user_id = u.id OR uf.friend_id = u.id)";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, id);
+            preparedStatement.setString(2, id);
+            preparedStatement.setString(3, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return User.mapRSToListEntity(resultSet);
+        } catch (SQLException e) {
+            throw e;
+        }
+    }
 }
