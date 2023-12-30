@@ -76,8 +76,8 @@ public class UserService {
     }
 
     public void resetAndSendPasswordToEmail(UserEntity user) throws Exception {
-        String senderEmail = "chatgptnnam@gmail.com";
-        String senderPassword = "gqbu tbmf gkvw axxg";
+        String senderEmail = "shoptea.tealicious@gmail.com";
+        String senderPassword = "xlgs ghtt wujl nxcg";
 
         String newPassword = generateRandomPassword();
 
@@ -109,7 +109,7 @@ public class UserService {
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
 
             // Set the email subject and content
-            message.setSubject("Hello from JavaMail");
+            message.setSubject("Chat App - Reset Password");
             message.setText("Your new password is: " + newPassword);
 
             repo.resetPassword(user, Utils.hashString(newPassword));
@@ -241,11 +241,12 @@ public class UserService {
         }
     }
 
-    public void createGroup(String userId, String groupName) {
+    public String createGroup(String userId, String groupName) {
         try {
-            repo.createGroup(userId, groupName);
+            return repo.createGroup(userId, groupName);
         } catch (Exception e) {
             System.out.println(e);
+            return "";
         }
     }
 
@@ -272,6 +273,30 @@ public class UserService {
         } catch (Exception e) {
             System.out.println(e);
             return new ArrayList<>();
+        }
+    }
+
+    public void removeUserFromGroup(String groupId, String userIdByUsername) {
+        try {
+            repo.removeUserFromGroup(groupId, userIdByUsername);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void renameGroup(String groupId, String groupName) {
+        try {
+            repo.renameGroup(groupId, groupName);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+
+    public void giveAdminRole(String groupId, String userIdByUsername) {
+        try {
+            repo.giveAdminRole(groupId, userIdByUsername);
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
 }

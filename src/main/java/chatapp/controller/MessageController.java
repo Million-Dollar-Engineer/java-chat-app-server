@@ -47,6 +47,7 @@ public class MessageController {
     @GetMapping("/group-history")
     public List<MessageHistoryResponse> groupHistory(@RequestParam String id) throws Exception {
 
+        System.out.println("id: " + id);
         MessageEntity messageEntity = new GroupMessageEntity("", "", id, "", null);
 
         Result<List<MessageHistoryResponse>> result = service.findMessages(messageEntity);

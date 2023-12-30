@@ -262,9 +262,9 @@ public class UserController {
     @GetMapping("create-group")
     public ResponseEntity<String> createGroup(@RequestParam String user_id, @RequestParam String group_name) {
         try {
-            service.createGroup(user_id, group_name);
+            String group_id = service.createGroup(user_id, group_name);
             String jsonMessage;
-            jsonMessage = String.format("{\"message\": \"Group was created\"}");
+            jsonMessage = String.format("{\"message\": %s}", group_id);
 
             return ResponseEntity
                     .ok()
@@ -288,6 +288,111 @@ public class UserController {
             service.addUserToGroup(group_id, UserController.getUserIdByUsername(user_name));
             String jsonMessage;
             jsonMessage = String.format("{\"message\": \"User was added to group\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("remove-user-from-group")
+    public ResponseEntity<String> removeUserFromGroup(@RequestParam String user_id, @RequestParam String group_id, @RequestParam String user_name) throws Exception {
+        if (!isUserInGroup(user_id, group_id)) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"you dont have permission\"}");
+        }
+
+        List<GroupMember> members = service.listGroupMember(group_id);
+        boolean isAdmin = false;
+
+        for (GroupMember member : members) {
+            if (member.getUserName().equals(UserController.getUsernameById(user_id)) && member.getRole().equals("admin")) {
+                isAdmin = true;
+                break;
+            }
+        }
+
+        try {
+
+            if (!isAdmin) {
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .header("Content-Type", "application/json")
+                        .body("{\"error\": \"you dont have permission\"}");
+            }
+
+            service.removeUserFromGroup(group_id, UserController.getUserIdByUsername(user_name));
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was removed from group\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("rename-group")
+    public ResponseEntity<String> renameGroup(@RequestParam String user_id, @RequestParam String group_id, @RequestParam String group_name) throws Exception {
+        if (!isUserInGroup(user_id, group_id)) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"you dont have permission\"}");
+        }
+
+        try {
+            service.renameGroup(group_id, group_name);
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"Group was renamed\"}");
+
+            return ResponseEntity
+                    .ok()
+                    .header("Content-Type", "application/json").
+                    body(jsonMessage);
+        } catch (Exception e) {
+            return responseError(e);
+        }
+    }
+
+    @GetMapping("give-admin-role")
+    public ResponseEntity<String> giveAdminRole(@RequestParam String user_id, @RequestParam String group_id, @RequestParam String user_name) throws Exception {
+        if (!isUserInGroup(user_id, group_id)) {
+            return ResponseEntity
+                    .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .header("Content-Type", "application/json")
+                    .body("{\"error\": \"you dont have permission\"}");
+        }
+
+        List<GroupMember> members = service.listGroupMember(group_id);
+        boolean isAdmin = false;
+
+        for (GroupMember member : members) {
+            if (member.getUserName().equals(UserController.getUsernameById(user_id)) && member.getRole().equals("admin")) {
+                isAdmin = true;
+                break;
+            }
+        }
+
+        try {
+
+            if (!isAdmin) {
+                return ResponseEntity
+                        .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .header("Content-Type", "application/json")
+                        .body("{\"error\": \"you dont have permission\"}");
+            }
+
+            service.giveAdminRole(group_id, UserController.getUserIdByUsername(user_name));
+            String jsonMessage;
+            jsonMessage = String.format("{\"message\": \"User was given admin role\"}");
 
             return ResponseEntity
                     .ok()

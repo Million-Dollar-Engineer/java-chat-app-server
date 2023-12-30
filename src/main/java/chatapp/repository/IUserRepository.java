@@ -46,11 +46,17 @@ public interface IUserRepository {
 
     void reportSpam(String userId, String userIdByUsername, String reason);
 
-    void createGroup(String userId, String groupName);
+    String createGroup(String userId, String groupName);
 
     void addUserToGroup(String groupId, String userIdByUsername);
 
     List<GroupChatEntity> listMyGroup(String userId);
 
     List<GroupMember> listGroupMember(String groupId);
+
+    void removeUserFromGroup(String groupId, String userIdByUsername);
+
+    void renameGroup(String groupId, String groupName);
+
+    void giveAdminRole(String groupId, String userIdByUsername);
 }
