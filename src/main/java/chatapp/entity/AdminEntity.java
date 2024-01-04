@@ -82,6 +82,7 @@ public class AdminEntity {
                 res += "{" +
                         "\"id\": \"" + resultSet.getString("u_id") + '\"' +
                         ", \"username\": \"" + resultSet.getString("username") + '\"' +
+                        ", \"created_at\": \"" + resultSet.getString("created_at") + '\"' +
                         ", \"friend\": \"" + f + '\"' +
                         ", \"friendOfFriend\": \"" + fof + '\"' +
 
@@ -135,6 +136,7 @@ public class AdminEntity {
                 res += "{" +
                         "\"id\": \"" + resultSet.getString("id") + '\"' +
                         ", \"username\": \"" + resultSet.getString("username") + '\"' +
+                        ", \"created_at\": \"" + resultSet.getString("created_at") + '\"' +
                         ", \"access_times\": \"" + access_times + '\"' +
                         ", \"chatted_people\": \"" + personal_mes_num + '\"' +
                         ", \"chatted_group\": \"" + group_mes_num + '\"' +

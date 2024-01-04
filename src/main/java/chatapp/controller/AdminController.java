@@ -243,7 +243,7 @@ public class AdminController {
     public ResponseEntity<String> getFriendsAndFriendsOfFriends(
             @RequestParam(name = "sortBy", required = false) String sortBy,
             @RequestParam(name = "order", required = false) String order,
-            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "username", required = false) String name,
             @RequestParam(name = "equal", required = false) String equal,
             @RequestParam(name = "greaterThan", required = false) String greaterThan,
             @RequestParam(name = "lowerThan", required = false) String lowerThan

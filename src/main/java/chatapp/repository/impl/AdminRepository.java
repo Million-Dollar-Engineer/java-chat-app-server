@@ -249,7 +249,7 @@ public class AdminRepository implements IAdminRepository {
                                               String lowerThan, String equal) throws SQLException{
         String res = "";
 
-        String query = "SELECT u1.id u_id, u1.username,(SELECT COUNT(*) \n" +
+        String query = "SELECT u1.id u_id, u1.username, u1.created_at, (SELECT COUNT(*) \n" +
                 "\t\t\tFROM user_friends uf JOIN users u ON ( uf.is_accepted= true AND (uf.user_id = u.id OR uf.friend_id = u.id))\n" +
                 "\t\t\tWHERE u.id = u1.id\n" +
                 "\t\t\tGROUP BY u.id) friend, (SELECT COUNT(*) \n" +
@@ -306,7 +306,7 @@ public class AdminRepository implements IAdminRepository {
          String endTime, String username, String equal, String greaterThan, String lowerThan
     ) throws SQLException {
         String res = "";
-        String query = "SELECT u.id, u.username ,(SELECT COUNT(*) FROM access_histories ah\n" +
+        String query = "SELECT u.id, u.username, u.created_at ,(SELECT COUNT(*) FROM access_histories ah\n" +
                 "\t\t\tWHERE ah.access_at >= ? AND ah.access_at <= ? AND ah.user_id = u.id\n" +
                 "\t\t\tGROUP BY ah.user_id) access_times, (SELECT COUNT(*) FROM personal_messages pm\n" +
                 "\t\t\t\t\t\t\t\t\t\t\t   WHERE pm.sender_id = u.id \n" +
