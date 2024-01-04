@@ -261,8 +261,8 @@ public class AdminRepository implements IAdminRepository {
                 "FROM users u1 ";
 
         query += " WHERE true ";
-        if(name != null){
-            query += (" AND u1.username ILIKE '%" +name + "%' ");
+        if(name != null && !name.isEmpty()){
+            query += (" AND u1.full_name ILIKE '%" +name + "%' ");
         }
 
         if(sortBy != null){
