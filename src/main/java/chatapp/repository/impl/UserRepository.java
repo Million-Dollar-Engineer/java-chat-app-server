@@ -1,6 +1,7 @@
 package chatapp.repository.impl;
 
 
+import chatapp.dto.GroupMember;
 import chatapp.dto.User;
 import chatapp.entity.GroupChatEntity;
 import chatapp.entity.UserEntity;
@@ -388,7 +389,7 @@ public class UserRepository implements IUserRepository {
         }
     }
 
-    public void createGroup(String userId, String groupName) {
+    public String createGroup(String userId, String groupName) {
         UUID uuid = UUID.randomUUID();
         String uuidAsString = uuid.toString();
         String query = "INSERT INTO chat_groups (id, name) VALUES (?, ?)";
@@ -414,6 +415,8 @@ public class UserRepository implements IUserRepository {
         } catch (SQLException e) {
             System.out.println(e);
         }
+
+        return uuidAsString;
     }
 
     public void addUserToGroup(String userId, String groupId) {
@@ -445,4 +448,53 @@ public class UserRepository implements IUserRepository {
         }
     }
 
+    public List<GroupMember> listGroupMember(String groupId) {
+        String query = "SELECT u.username, u.full_name, cgm.member_role FROM chat_group_members cgm, users u " +
+                "WHERE cgm.group_id = ? AND cgm.member_id = u.id";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, groupId);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return GroupMember.mapRSToListEntity(resultSet);
+        } catch (SQLException e) {
+            System.out.println(e);
+            return null;
+        }
+    }
+
+    public void removeUserFromGroup(String groupId, String userIdByUsername) {
+        String query = "DELETE FROM chat_group_members WHERE group_id = ? AND member_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, groupId);
+            preparedStatement.setString(2, userIdByUsername);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void renameGroup(String groupId, String groupName) {
+        String query = "UPDATE chat_groups SET name = ? WHERE id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, groupName);
+            preparedStatement.setString(2, groupId);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+    public void giveAdminRole(String groupId, String userIdByUsername) {
+        String query = "UPDATE chat_group_members SET member_role = 'admin' WHERE group_id = ? AND member_id = ?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            preparedStatement.setString(1, groupId);
+            preparedStatement.setString(2, userIdByUsername);
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
 }
