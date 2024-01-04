@@ -166,7 +166,6 @@ public class AdminController {
     public List<User> getFriendList(@PathVariable String user_id) {
         try {
             List<User> friendList = userService.getFriendList(user_id);
-            String jsonMessage = String.format("{\"friendList\":  %s }", "");
             return friendList;
         } catch (Exception e) {
             return Collections.EMPTY_LIST;

@@ -57,7 +57,7 @@ public class AdminRepository implements IAdminRepository {
         if (status != null) {
             if (count > 0) query += " and ";
             count += 1;
-            query += " status ILIKE" + "'%" + status + "%' ";
+            query += " status = " + "'" + status + "' ";
         }
         if (startTime != null) {
             if (count > 0) query += " and ";
@@ -322,17 +322,11 @@ public class AdminRepository implements IAdminRepository {
         if(startTime != null && endTime != null){
             query += String.format(" AND u.created_at >= '%s' AND u.created_at <= '%s' ", startTime, endTime);
         }
-        if(sortBy != null){
-
-            if(sortBy.equals("time")){
-                sortBy = "u.created_at";
-                query += (" ORDER BY " + sortBy);
+        if(sortBy != null && !sortBy.isEmpty()){
+            query += (" ORDER BY u." + sortBy);
+            if(order != null) {
+                query += (" " + order + " ");
             }
-            else if(sortBy.equals("username")){
-                sortBy = "u.username";
-                query += (" ORDER BY " + sortBy);
-            }
-
         }
         try (PreparedStatement preparedStatement = conn.prepareStatement(query)){
             startTime += " 00:00:00";
