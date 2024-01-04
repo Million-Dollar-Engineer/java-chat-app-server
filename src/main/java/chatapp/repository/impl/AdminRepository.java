@@ -190,7 +190,7 @@ public class AdminRepository implements IAdminRepository {
             throws SQLException{
         String res = "";
 
-        String query = "SELECT s.* FROM spam_reports s, users u WHERE s.accused_id=u.id  ";
+        String query = "SELECT s.*, u.username FROM spam_reports s, users u WHERE s.accused_id=u.id  ";
         if(username != null){
             query += (" AND u.username ILIKE '%" + username + "%' ");
         }

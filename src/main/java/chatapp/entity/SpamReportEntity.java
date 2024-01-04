@@ -10,12 +10,15 @@ public class SpamReportEntity {
     private String reason;
     private String created_at;
 
-    public SpamReportEntity(String id, String reporter_id, String accused_id, String reason, String created_at) {
+    private String username;
+
+    public SpamReportEntity(String id, String reporter_id, String accused_id, String reason, String created_at, String username) {
         this.id = id;
         this.reporter_id = reporter_id;
         this.accused_id = accused_id;
         this.reason = reason;
         this.created_at = created_at;
+        this.username = username;
     }
 
     public String getId() {
@@ -66,6 +69,7 @@ public class SpamReportEntity {
                 ", \"accused_id\": \"" + accused_id + '\"' +
                 ", \"reason\": \"" + reason + '\"' +
                 ", \"created_at\": \"" + created_at + '\"' +
+                ", \"username\": \"" + username + '\"' +
                 '}';
     }
 
@@ -80,7 +84,8 @@ public class SpamReportEntity {
                         resultSet.getString("reporter_id"),
                         resultSet.getString("accused_id"),
                         resultSet.getString("reason"),
-                        resultSet.getString("created_at")
+                        resultSet.getString("created_at"),
+                        resultSet.getString("username")
                 );
                 res += spam.toString();
                 count++;
